@@ -3,5 +3,5 @@
 ## Graph.py
 Will draw the board of the game, with number ID on each cell.
 
-## Level.py
+## level.py
 For computing the desire target and the neighbor with the longest path 
