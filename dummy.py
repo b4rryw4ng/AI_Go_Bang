@@ -84,7 +84,7 @@ def get_level(ID):
         return 10
     elif ID <= 216:
         return 9   
-
+###### check longest length and construct node
 def check_valid_1(ID, node_list):
     flag = 0
     if ID == point0 or ID == point8 or ID == point100:
@@ -330,7 +330,163 @@ def build_node(oplist):
         dir5_cnt = 0
         dir6_cnt = 0
     return node_list
+###### check longest length and construct node
+###### check op neighbor and whether if the neighbor is valid next move
+def dir1_neighbor(ID):
+    level = get_level(ID)
+    if ID > 116:
+        wanted = ID - level -1
+    else :
+        wanted = ID - level
+    return wanted
+def dir2_neighbor(ID):
+    level = get_level(ID)
 
+    if ID > 116:
+        wanted = ID - level
+    else :
+        wanted = ID - level + 1
+
+    return wanted
+
+def dir3_neighbor(ID):
+    wanted = ID - 1
+    
+    return wanted
+
+
+def dir4_neighbor(ID):
+
+    wanted = ID + 1
+    return wanted
+
+def dir5_neighbor(ID):
+    level = get_level(ID)
+    if ID >= 100:
+        wanted = ID + level - 1
+    else : 
+        wanted = ID + level
+
+    return wanted
+
+
+def dir6_neighbor(ID):
+    level = get_level(ID)
+    if ID >= 100:
+        wanted = ID + level
+    else :
+        wanted = ID + level + 1
+
+    return wanted
+
+def check_neighbor(total_list): # my point 
+    target = []
+
+    for i in op_list :
+        a = -1
+        b = -1
+        c = -1
+        d = -1
+        e = -1
+        f = -1
+        if i == point0:
+            d = dir4_neighbor(i) #4
+            e = dir5_neighbor(i) #5
+            f = dir6_neighbor(i) #6
+        elif i == point8:
+            c = dir3_neighbor(i) #3
+            e = dir5_neighbor(i) #5
+            f = dir6_neighbor(i) #6
+        elif i == point100:
+            b = dir2_neighbor(i) #2
+            d = dir4_neighbor(i) #4
+            f = dir6_neighbor(i) #6
+        elif i == point116:
+            a = dir1_neighbor(i)
+            c = dir3_neighbor(i)
+            e = dir5_neighbor(i) #5
+        elif i == point208:
+            a = dir1_neighbor(i)
+            b = dir2_neighbor(i)
+            d = dir4_neighbor(i) #4
+        elif i == point216:
+            a = dir1_neighbor(i)
+            b = dir2_neighbor(i)
+            c = dir3_neighbor(i)
+        #check border
+        elif i in boarder1: 
+            b = dir2_neighbor(i)
+            d = dir4_neighbor(i)
+            e = dir5_neighbor(i)
+            f = dir6_neighbor(i) #4
+        elif i in boarder2:
+            c = dir3_neighbor(i)
+            d = dir4_neighbor(i)
+            e = dir5_neighbor(i)
+            f = dir6_neighbor(i)
+        elif i in boarder3: 
+            a = dir1_neighbor(i)
+            c = dir3_neighbor(i)
+            e = dir5_neighbor(i)
+            f = dir6_neighbor(i)
+            
+        elif i in boarder4: 
+            a = dir1_neighbor(i)
+            b = dir2_neighbor(i)
+            c = dir3_neighbor(i)
+            d = dir5_neighbor(i)
+        elif i in boarder5:
+            a = dir1_neighbor(i)
+            b = dir2_neighbor(i)
+            c = dir3_neighbor(i)
+            d = dir4_neighbor(i)
+        elif i in boarder6: 
+            a = dir1_neighbor(i)
+            b = dir2_neighbor(i)
+            d = dir4_neighbor(i)
+            f = dir6_neighbor(i)
+        else:
+            a = dir1_neighbor(i)
+            b = dir2_neighbor(i)
+            c = dir3_neighbor(i)
+            d = dir4_neighbor(i)
+            e = dir5_neighbor(i)
+            f = dir6_neighbor(i)
+
+        if a != -1:
+            if a not in total_list:
+                target.append(a)
+
+        if b != -1:
+            if b not in total_list:
+                target.append(b)
+        if c != -1:
+            if c not in total_list:
+                target.append(c) 
+        if d != -1:
+            if d not in total_list:
+                target.append(d) 
+        if e != -1:
+            if e not in total_list:
+                target.append(e) 
+        if f != -1:
+            if f not in total_list:
+                target.append(f)  
+
+    #print ("target : " ,target)
+    return target 
+
+def get_neighbor(valid_list, op_list):
+    # should check if the target is in valid or not
+    # implant in dummy
+    target = check_neighbor(op_list)
+    data = []
+    for i in target:
+        if i in valid_list:
+            data.append(i)
+
+    return data
+###### check op neighbor and whether if the neighbor is valid next move
 class Agent:
     """
     Game agent.
@@ -421,8 +577,12 @@ class Agent:
 
         Check them below for more detail
         """
-        op_list = build_node(self.get_opponent_pos()) #input a list of data
+        raw_op_list = self.get_opponent_pos()
+        raw_valid_list = self.get_valid_pos()
+        op_list = build_node(raw_op_list) #input a list of data
         #op_list is node list with directional commutation
+
+        get_neighbor(raw_valid_list,raw_op_list)
         #Minimax(self.get_valid_pos(), oplist, alpha, depth)
         return self.valid_pos[randint(0, len(self.valid_pos)-1)]
 
