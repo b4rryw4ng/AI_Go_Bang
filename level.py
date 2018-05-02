@@ -484,70 +484,121 @@ def get_neighbor(op_list):
     target = check_neighbor(op_list)
     #print()
     return target
-"""    
+   
 def dead_or_alive_dir1(ID, node_list):
-    flag1 = 0
-    flag2 = 0
-    if ID == point0 or ID == point8 or ID == point100:
-        flag1 = 1
-    elif ID in boarder1 or ID in boarder2:
-        flag1 = 1
-
-    if ID == point116 or ID == point208 or ID == point216:
-        flag2 = 1
-    elif ID in boarder4 or ID in boarder5:
-        flag2 = 1
-
     wanted1 = -1
-    wanted6 = -1
-    
-    if flag1 == 0:
-        wanted1 = dir1_neighbor(ID) # if any neighbor exist 
-    if flag2 == 0:
-        wanted6 = dir6_neighbor(ID)
+    wanted6 = -1    
+    wanted1 = dir1_neighbor(ID) # if any neighbor exist    
+    wanted6 = dir6_neighbor(ID)
 
     doa_dir1 = -1
     doa_dir6 = -1
     position = -1
 
     for i in node_list:
-        if i.ID = wanted1:
+        if i.ID == wanted1:
             doa_dir1 = i.dir1_cnt
-        if i.ID = wanted6:
+        if i.ID == wanted6:
             doa_dir6 = i.dir1_cnt
     
     if doa_dir1 != -1 and doa_dir6 != -1:
         # yes yes 
-        new_dir = doa_dir1 + doa_dir6
+        new_len = doa_dir1 + doa_dir6 + 1
         position = doa_dir1 + 1
     elif doa_dir1 != -1 or doa_dir6 != -1:
         if doa_dir1 == -1:
-            new_dir = doa_dir6 + 1
+            new_len = doa_dir6 + 1
             position = 1
         else :
             position = doa_dir1 + 1 
-            new_dir = doa_dir1 + 1
+            new_len = doa_dir1 + 1
     else :
         position = 1
-        new_dir = 1
+        new_len = 1
     
-    return position, new_dir
+    return position, new_len
+def dead_or_alive_dir2(ID, node_list):
+    wanted2 = -1
+    wanted5 = -1    
+    wanted2 = dir2_neighbor(ID) # if any neighbor exist    
+    wanted5 = dir5_neighbor(ID)
 
+    doa_dir2 = -1
+    doa_dir5 = -1
+    position = -1
+
+    for i in node_list:
+        if i.ID == wanted2:
+            doa_dir2 = i.dir2_cnt
+        if i.ID == wanted5:
+            doa_dir5 = i.dir2_cnt
+    
+    if doa_dir2 != -1 and doa_dir5 != -1:
+        # yes yes 
+        new_len = doa_dir2 + doa_dir5 + 1
+        position = doa_dir2 + 1
+    elif doa_dir2 != -1 or doa_dir5 != -1:
+        if doa_dir2 == -1:
+            new_len = doa_dir5 + 1
+            position = 1
+        else :
+            position = doa_dir2 + 1 
+            new_len = doa_dir2 + 1
+    else :
+        position = 1
+        new_len = 1
+    
+    return position, new_len
+def dead_or_alive_dir3(ID, node_list):
+    wanted3 = -1
+    wanted4 = -1    
+    wanted3 = dir3_neighbor(ID) # if any neighbor exist    
+    wanted4 = dir4_neighbor(ID)
+
+    doa_dir3 = -1
+    doa_dir4 = -1
+    position = -1
+
+    for i in node_list:
+        if i.ID == wanted3:
+            doa_dir3 = i.dir3_cnt
+        if i.ID == wanted4:
+            doa_dir4 = i.dir3_cnt
+    
+    if doa_dir3 != -1 and doa_dir4 != -1:
+        # yes yes 
+        new_len = doa_dir3 + doa_dir4 + 1
+        position = doa_dir3 + 1
+    elif doa_dir3 != -1 or doa_dir4 != -1:
+        if doa_dir3 == -1:
+            new_len = doa_dir4 + 1
+            position = 1
+        else :
+            position = doa_dir3 + 1 
+            new_len = doa_dir3 + 1
+    else :
+        position = 1
+        new_len = 1
+    
+    return position, new_len
 
 def dead_or_alive(ID, node_list):
-    current_dir1_pos, dir1_case = dead_or_alive_dir1(ID, node_list) 
-    # fuc (pos, case)   
-    current_dir2_pos, dir1_case = dead_or_alive_dir2(ID, node_list)
-    current_dir3_pos, dir1_case = dead_or_alive_dir3(ID, node_list)
-"""
+    current_dir1_pos, dir1_case = dead_or_alive_dir1(ID, node_list)   
+    current_dir2_pos, dir2_case = dead_or_alive_dir2(ID, node_list)
+    current_dir3_pos, dir3_case = dead_or_alive_dir3(ID, node_list)
+    print(current_dir1_pos, dir1_case)
+    print(current_dir2_pos, dir2_case)
+    print(current_dir3_pos, dir3_case)
+
 rtlist=[]
-op_list = [48, 66, 75, 100, 116, 151, 195, 206]
+op_list = [161, 174, 186]
 my_list=[0, 8, 100, 116, 208, 216]
 #total_list = my_list + op_list
 print ("my_list: ", my_list)
 print ("op_list: ", op_list)
 #print ("total_list: ", total_list)
-rtlist = get_neighbor(my_list)
+node = build_node(op_list)
+dead_or_alive(147, node)
 
 ''' 
 for i in rtlist:
