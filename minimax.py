@@ -1,5 +1,12 @@
-def IDS(data, my_list, op_list): #data neighbor in valid move 
-    #evaluate_neighbor(data) #recalculate the sequence for the data
+import time as t
+__move = 0
+__alpha = -100
+
+def IDS(start,data, my_list, op_list):
+    #data neighbor in valid move 
+    # all input is raw data
+    #start is the time 
+    global __move, __alpha
     depth = 0
 
     while True:
@@ -7,15 +14,17 @@ def IDS(data, my_list, op_list): #data neighbor in valid move
         depth += 1
         flag = 0
 
-        dfs( data, my_list, op_list, alpha, beta, depth)
+        dfs( data, my_list, op_list, depth)
+        __alpha = -100
         
-
+        if t.time() - start > 4.8:
+            break
         #alpha stands for current worst value
-        # beta stands for current best next move position
-    pass
-__move = 0
-__alpha = -100
+    return __move
+
 def dfs( data, my_list, op_list, depth):
+    global __move, __alpha
+
     if depth == 0:
         # leaf node 
         flag, ID, alpha = evaluate(data, alpha)

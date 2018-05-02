@@ -7,6 +7,7 @@
 
 # !! Remember to change the team number in main() !!
 import os
+import time as t
 from random import randint
 # Global Value
 point0 = 0 # without 1, 2, 3
@@ -497,6 +498,13 @@ def get_neighbor(valid_list, op_list):
 
     return data
 ###### check op neighbor and whether if the neighbor is valid next move
+###### IDS and Evaluaion function
+
+
+###### IDS and Evaluaion function
+###### Time
+
+###### Time
 class Agent:
     """
     Game agent.
@@ -587,12 +595,16 @@ class Agent:
 
         Check them below for more detail
         """
+        start = t.time()
+        raw_my_list = self.get_my_pos()
         raw_op_list = self.get_opponent_pos()
         raw_valid_list = self.get_valid_pos()
-        op_list = build_node(raw_op_list) #input a list of data
+
+        #op_list = build_node(raw_op_list) #input a list of data
         #op_list is node list with directional commutation
 
-        get_neighbor(raw_valid_list,raw_op_list)
+        data = get_neighbor(raw_valid_list,raw_op_list)
+        pos = IDS(start,data,raw_my_list,raw_op_list)
         #Minimax(self.get_valid_pos(), oplist, alpha, depth)
         return self.valid_pos[randint(0, len(self.valid_pos)-1)]
 
