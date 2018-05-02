@@ -150,7 +150,7 @@ def check_valid_3(ID, node_list):
     for i in node_list:
         if wanted == i.ID:
             if i.dir1 == True:
-                return i.dir1_cnt
+                return i.dir3_cnt
 
     return -1
 
@@ -216,7 +216,7 @@ def dir6_next_node(ID, op_list):
     else :
         return
 
-def build_node(oplist):
+def build_node(op_list):
     global dir6_cnt, dir5_cnt, dir4_cnt
     node_list = []
     for i in op_list:
@@ -232,11 +232,15 @@ def build_node(oplist):
         elif i == point8:
             if flag_dir3 == -1: #check 3
                 dir4_cnt = 1
+            else : 
+                dir4_cnt = flag_dir3
             dir5_next_node( i, op_list) #5
             dir6_next_node( i, op_list) #6
         elif i == point100:
             if flag_dir2 == -1: #check 2
                 dir5_cnt = 1
+            else: 
+                dir5_cnt = flag_dir2
             dir4_next_node( i, op_list) #4
             dir6_next_node( i, op_list) #6
         elif i == point116:
@@ -244,20 +248,32 @@ def build_node(oplist):
                 dir6_cnt = 1
             if flag_dir3 == -1: #check 3
                 dir4_cnt = 1
+            else :
+                dir4_cnt = flag_dir3
             dir5_next_node( i, op_list) #5
         elif i == point208:
             if flag_dir1 == -1: #check 1
                 dir6_cnt = 1
+            else:
+                dir6_cnt = flag_dir1
             if flag_dir2 == -1: #check 2
                 dir5_cnt = 1
+            else : 
+                dir5_cnt = flag_dir2
             dir4_next_node( i, op_list) #4
         elif i == point216:
             if flag_dir1 == -1: #check 1
                 dir6_cnt = 1
+            else : 
+                dir6_cnt = flag_dir1
             if flag_dir2 == -1: #check 2
                 dir5_cnt = 1
+            else : 
+                dir5_cnt = flag_dir2
             if flag_dir3 == -1: #check 3
                 dir4_cnt = 1
+            else : 
+                dir4_cnt = flag_dir3
         #check border
         elif i in boarder1: 
             if flag_dir2 == -1: #check 2
@@ -271,7 +287,7 @@ def build_node(oplist):
             if flag_dir3 == -1: #check 3
                 dir4_next_node( i, op_list) #4
             else:
-                dir4_cnt
+                dir4_cnt = flag_dir3
             dir5_next_node( i, op_list) #5
             dir6_next_node( i, op_list) #6
         elif i in boarder3: 
@@ -281,23 +297,33 @@ def build_node(oplist):
                 dir6_cnt = flag_dir1
             if flag_dir3 == -1: #check 3
                 dir4_cnt = 1
+            else :
+                dir4_cnt = flag_dir3
 
             dir5_next_node( i, op_list) #5
             
         elif i in boarder4: 
             if flag_dir1 == -1: #check 1
                 dir6_cnt = 1
+            else :
+                dir6_cnt = flag_dir1
             if flag_dir2 == -1: #check 2
                 dir5_next_node( i, op_list) #5
             else :
                 dir5_cnt = flag_dir2
             if flag_dir3 == -1: #check 3
                 dir4_cnt = 1
+            else :
+                dir4_cnt = flag_dir3
         elif i in boarder5:
             if flag_dir1 == -1: #check 1
                 dir6_cnt = 1
+            else :
+                dir6_cnt = flag_dir1
             if flag_dir2 == -1: #check 2
                 dir5_cnt = 1
+            else :
+                dir5_cnt = flag_dir2
             if flag_dir3 == -1: #check 3
                 dir4_next_node( i, op_list) #4
             else:
@@ -309,6 +335,8 @@ def build_node(oplist):
                 dir6_cnt = flag_dir1
             if flag_dir2 == -1: #check 2
                 dir5_cnt = 1
+            else : 
+                dir5_cnt = flag_dir2
             dir4_next_node( i, op_list) #4
         #get level
         else:
