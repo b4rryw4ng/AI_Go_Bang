@@ -49,10 +49,10 @@ def check_valid_1(ID, node_list):
 
     level = get_level(ID)
 
-    if ID > 116:
-        wanted = ID - level -1
+    if ID <= 116:
+        wanted = ID - level 
     else :
-        wanted = ID - level
+        wanted = ID - level -1
 
     for i in node_list:
         if wanted == i.ID:
@@ -73,10 +73,10 @@ def check_valid_2(ID, node_list):
 
     level = get_level(ID)
 
-    if ID > 116:
-        wanted = ID - level
-    else :
+    if ID <= 116:
         wanted = ID - level + 1
+    else :
+        wanted = ID - level
 
     for i in node_list:
         if wanted == i.ID:
@@ -203,8 +203,10 @@ def get_level(ID):
         return 12
     elif ID <= 197:
         return 11
-    elif ID <= 216:
+    elif ID <= 207:
         return 10
+    elif ID <= 216:
+        return 9
         
 
 
@@ -355,35 +357,63 @@ def build_node(op_list):
     return node_list
 def dir1_neighbor(ID):
     level = get_level(ID)
-    #print ("wanted_list: ",wanted_list)
-    if ID > 116:
-        wanted = ID - level -1
+
+    if ID == point0 or ID == point8 or ID == point100:
+        return -1
+    elif ID in boarder1 or ID in boarder2:
+        return -1
+
+    if ID <= 116:
+        wanted = ID - level 
     else :
-        wanted = ID - level
+        wanted = ID - level -1
     return wanted
+
 def dir2_neighbor(ID):
     level = get_level(ID)
 
-    if ID > 116:
-        wanted = ID - level
-    else :
+    if ID == point0 or ID == point8 or ID == point116:
+        return -1
+    elif ID in boarder2 or ID in boarder3:
+        return -1
+
+    if ID <= 116:
         wanted = ID - level + 1
+    else :
+        wanted = ID - level
 
     return wanted
 
 def dir3_neighbor(ID):
+    
+    if ID == point0 or ID == point100 or ID == point208:
+        return -1
+    elif ID in boarder1 or ID in boarder6:
+        return -1
+
+   
     wanted = ID - 1
     
     return wanted
 
 
 def dir4_neighbor(ID):
-
+    if ID == point8 or ID == point116 or ID == point216:
+        return -1
+    elif ID in boarder3 or ID in boarder4:
+        return -1
+        
     wanted = ID + 1
     return wanted
 
 def dir5_neighbor(ID):
     level = get_level(ID)
+
+    if ID == point100 or ID == point208 or ID == point216:
+        return -1
+    elif ID in boarder5 or ID in boarder6:
+        return -1
+
     if ID >= 100:
         wanted = ID + level - 1
     else : 
@@ -394,6 +424,12 @@ def dir5_neighbor(ID):
 
 def dir6_neighbor(ID):
     level = get_level(ID)
+
+    if ID == point116 or ID == point208 or ID == point216:
+        return -1
+    elif ID in boarder5 or ID in boarder4:
+        return -1
+
     if ID >= 100:
         wanted = ID + level
     else :
@@ -412,74 +448,15 @@ def check_neighbor(target_list): # my point
         d = -1
         e = -1
         f = -1
-        if i == point0:
-            d = dir4_neighbor(i) #4
-            e = dir5_neighbor(i) #5
-            f = dir6_neighbor(i) #6
-        elif i == point8:
-            c = dir3_neighbor(i) #3
-            #print (c)
-            e = dir5_neighbor(i) #5
-            #print (e)
-            f = dir6_neighbor(i) #6
-            #print (f)
-        elif i == point100:
-            b = dir2_neighbor(i) #2
-            d = dir4_neighbor(i) #4
-            f = dir6_neighbor(i) #6
-        elif i == point116:
-            a = dir1_neighbor(i)
-            c = dir3_neighbor(i)
-            e = dir5_neighbor(i) #5
-        elif i == point208:
-            a = dir1_neighbor(i)
-            b = dir2_neighbor(i)
-            d = dir4_neighbor(i) #4
-        elif i == point216:
-            a = dir1_neighbor(i)
-            b = dir2_neighbor(i)
-            c = dir3_neighbor(i)
-        #check border
-        elif i in boarder1: 
-            b = dir2_neighbor(i)
-            d = dir4_neighbor(i)
-            e = dir5_neighbor(i)
-            f = dir6_neighbor(i) #4
-        elif i in boarder2:
-            c = dir3_neighbor(i)
-            d = dir4_neighbor(i)
-            e = dir5_neighbor(i)
-            f = dir6_neighbor(i)
-        elif i in boarder3: 
-            a = dir1_neighbor(i)
-            c = dir3_neighbor(i)
-            e = dir5_neighbor(i)
-            f = dir6_neighbor(i)
-            
-        elif i in boarder4: 
-            a = dir1_neighbor(i)
-            b = dir2_neighbor(i)
-            c = dir3_neighbor(i)
-            d = dir5_neighbor(i)
-        elif i in boarder5:
-            a = dir1_neighbor(i)
-            b = dir2_neighbor(i)
-            c = dir3_neighbor(i)
-            d = dir4_neighbor(i)
-        elif i in boarder6: 
-            a = dir1_neighbor(i)
-            b = dir2_neighbor(i)
-            d = dir4_neighbor(i)
-            f = dir6_neighbor(i)
-        #get level
-        else:
-            a = dir1_neighbor(i)
-            b = dir2_neighbor(i)
-            c = dir3_neighbor(i)
-            d = dir4_neighbor(i)
-            e = dir5_neighbor(i)
-            f = dir6_neighbor(i)
 
+        a = dir1_neighbor(i)
+        b = dir2_neighbor(i)
+        c = dir3_neighbor(i)
+        d = dir4_neighbor(i)
+        e = dir5_neighbor(i)
+        f = dir6_neighbor(i)
+
+        print (i, a, b, c, d, e, f)
         if a != -1:
             if a not in target_list and a not in target:
                 target.append(a)
@@ -505,12 +482,67 @@ def get_neighbor(op_list):
     # should check if the target is in valid or not
     # implant in dummy
     target = check_neighbor(op_list)
-    print()
+    #print()
     return target
+"""    
+def dead_or_alive_dir1(ID, node_list):
+    flag1 = 0
+    flag2 = 0
+    if ID == point0 or ID == point8 or ID == point100:
+        flag1 = 1
+    elif ID in boarder1 or ID in boarder2:
+        flag1 = 1
+
+    if ID == point116 or ID == point208 or ID == point216:
+        flag2 = 1
+    elif ID in boarder4 or ID in boarder5:
+        flag2 = 1
+
+    wanted1 = -1
+    wanted6 = -1
     
+    if flag1 == 0:
+        wanted1 = dir1_neighbor(ID) # if any neighbor exist 
+    if flag2 == 0:
+        wanted6 = dir6_neighbor(ID)
+
+    doa_dir1 = -1
+    doa_dir6 = -1
+    position = -1
+
+    for i in node_list:
+        if i.ID = wanted1:
+            doa_dir1 = i.dir1_cnt
+        if i.ID = wanted6:
+            doa_dir6 = i.dir1_cnt
+    
+    if doa_dir1 != -1 and doa_dir6 != -1:
+        # yes yes 
+        new_dir = doa_dir1 + doa_dir6
+        position = doa_dir1 + 1
+    elif doa_dir1 != -1 or doa_dir6 != -1:
+        if doa_dir1 == -1:
+            new_dir = doa_dir6 + 1
+            position = 1
+        else :
+            position = doa_dir1 + 1 
+            new_dir = doa_dir1 + 1
+    else :
+        position = 1
+        new_dir = 1
+    
+    return position, new_dir
+
+
+def dead_or_alive(ID, node_list):
+    current_dir1_pos, dir1_case = dead_or_alive_dir1(ID, node_list) 
+    # fuc (pos, case)   
+    current_dir2_pos, dir1_case = dead_or_alive_dir2(ID, node_list)
+    current_dir3_pos, dir1_case = dead_or_alive_dir3(ID, node_list)
+"""
 rtlist=[]
-op_list = [0,108]
-my_list=[1,2,3,4,5,6,7,8,9,10]
+op_list = [48, 66, 75, 100, 116, 151, 195, 206]
+my_list=[0, 8, 100, 116, 208, 216]
 #total_list = my_list + op_list
 print ("my_list: ", my_list)
 print ("op_list: ", op_list)

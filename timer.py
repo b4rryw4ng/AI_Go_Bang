@@ -9,6 +9,3 @@ while True :
     if end - start > 4.8:
         print (end - start)
         break
-
-
-#return 
