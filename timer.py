@@ -4,8 +4,8 @@ import time
 start = time.time()
 print (start)
 while True :
-    end = time.time()
+    #end = time.time()
 
-    if end - start > 4.8:
-        print (end - start)
+    if time.time() - start > 4.8:
+        print (time.time() - start)
         break
