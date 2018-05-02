@@ -407,10 +407,12 @@ def dir6_neighbor(ID):
 
     return wanted
 
-def check_neighbor(total_list): # my point 
-    target = []
 
-    for i in op_list :
+def check_neighbor(target_list): # my point 
+    target = []
+    #print (case, wanted_list)
+
+    for i in target_list :
         a = -1
         b = -1
         c = -1
@@ -423,8 +425,11 @@ def check_neighbor(total_list): # my point
             f = dir6_neighbor(i) #6
         elif i == point8:
             c = dir3_neighbor(i) #3
+            #print (c)
             e = dir5_neighbor(i) #5
+            #print (e)
             f = dir6_neighbor(i) #6
+            #print (f)
         elif i == point100:
             b = dir2_neighbor(i) #2
             d = dir4_neighbor(i) #4
@@ -473,6 +478,7 @@ def check_neighbor(total_list): # my point
             b = dir2_neighbor(i)
             d = dir4_neighbor(i)
             f = dir6_neighbor(i)
+        #get level
         else:
             a = dir1_neighbor(i)
             b = dir2_neighbor(i)
@@ -482,26 +488,24 @@ def check_neighbor(total_list): # my point
             f = dir6_neighbor(i)
 
         if a != -1:
-            if a not in total_list:
+            if a not in target_list and a not in target:
                 target.append(a)
-
         if b != -1:
-            if b not in total_list:
+            if b not in target_list and b not in target:
                 target.append(b)
         if c != -1:
-            if c not in total_list:
+            if c not in target_list and c not in target:
                 target.append(c) 
         if d != -1:
-            if d not in total_list:
+            if d not in target_list and d not in target:
                 target.append(d) 
         if e != -1:
-            if e not in total_list:
+            if e not in target_list and e not in target:
                 target.append(e) 
         if f != -1:
-            if f not in total_list:
+            if f not in target_list and f not in target:
                 target.append(f)  
 
-    #print ("target : " ,target)
     return target 
 
 def get_neighbor(valid_list, op_list):

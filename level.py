@@ -208,7 +208,7 @@ def get_level(ID):
         
 
 
-op_list = [0,108]
+
 # check if 1, 2, 3 direction has value 
 # if not compute 4, 5, 6 direction respectively
 def build_node(op_list):
@@ -401,11 +401,11 @@ def dir6_neighbor(ID):
 
     return wanted
 
-def check_neighbor(total_list): # my point 
+def check_neighbor(target_list): # my point 
     target = []
     #print (case, wanted_list)
 
-    for i in op_list :
+    for i in target_list :
         a = -1
         b = -1
         c = -1
@@ -481,43 +481,45 @@ def check_neighbor(total_list): # my point
             f = dir6_neighbor(i)
 
         if a != -1:
-            if a not in total_list:
+            if a not in target_list and a not in target:
                 target.append(a)
-
         if b != -1:
-            if b not in total_list:
+            if b not in target_list and b not in target:
                 target.append(b)
         if c != -1:
-            if c not in total_list:
+            if c not in target_list and c not in target:
                 target.append(c) 
         if d != -1:
-            if d not in total_list:
+            if d not in target_list and d not in target:
                 target.append(d) 
         if e != -1:
-            if e not in total_list:
+            if e not in target_list and e not in target:
                 target.append(e) 
         if f != -1:
-            if f not in total_list:
+            if f not in target_list and f not in target:
                 target.append(f)  
 
-    #print ("target : " ,target)
     return target 
 
 def get_neighbor(op_list):
     # should check if the target is in valid or not
     # implant in dummy
     target = check_neighbor(op_list)
+    print()
     return target
     
 rtlist=[]
-
+op_list = [0,108]
 my_list=[1,2,3,4,5,6,7,8,9,10]
-total_list = my_list + op_list
+#total_list = my_list + op_list
 print ("my_list: ", my_list)
 print ("op_list: ", op_list)
-print ("total_list: ", total_list)
-rtlist = build_node(my_list)
+#print ("total_list: ", total_list)
+rtlist = get_neighbor(my_list)
 
-    
+''' 
 for i in rtlist:
     i.print_data()
+'''
+
+print ("rtlist: ",rtlist)
