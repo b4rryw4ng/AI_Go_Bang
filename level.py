@@ -100,9 +100,12 @@ def check_valid_3(ID, node_list):
     
 
     for i in node_list:
+        
         if wanted == i.ID:
+            #print(i.ID)
+            #i.print_data()
             if i.dir1 == True:
-                return i.dir1_cnt
+                return i.dir3_cnt
 
     return -1
 
@@ -224,11 +227,15 @@ def build_node(op_list):
         elif i == point8:
             if flag_dir3 == -1: #check 3
                 dir4_cnt = 1
+            else : 
+                dir4_cnt = flag_dir3
             dir5_next_node( i, op_list) #5
             dir6_next_node( i, op_list) #6
         elif i == point100:
             if flag_dir2 == -1: #check 2
                 dir5_cnt = 1
+            else: 
+                dir5_cnt = flag_dir2
             dir4_next_node( i, op_list) #4
             dir6_next_node( i, op_list) #6
         elif i == point116:
@@ -236,20 +243,32 @@ def build_node(op_list):
                 dir6_cnt = 1
             if flag_dir3 == -1: #check 3
                 dir4_cnt = 1
+            else :
+                dir4_cnt = flag_dir3
             dir5_next_node( i, op_list) #5
         elif i == point208:
             if flag_dir1 == -1: #check 1
                 dir6_cnt = 1
+            else:
+                dir6_cnt = flag_dir1
             if flag_dir2 == -1: #check 2
                 dir5_cnt = 1
+            else : 
+                dir5_cnt = flag_dir2
             dir4_next_node( i, op_list) #4
         elif i == point216:
             if flag_dir1 == -1: #check 1
                 dir6_cnt = 1
+            else : 
+                dir6_cnt = flag_dir1
             if flag_dir2 == -1: #check 2
                 dir5_cnt = 1
+            else : 
+                dir5_cnt = flag_dir2
             if flag_dir3 == -1: #check 3
                 dir4_cnt = 1
+            else : 
+                dir4_cnt = flag_dir3
         #check border
         elif i in boarder1: 
             if flag_dir2 == -1: #check 2
@@ -263,7 +282,7 @@ def build_node(op_list):
             if flag_dir3 == -1: #check 3
                 dir4_next_node( i, op_list) #4
             else:
-                dir4_cnt
+                dir4_cnt = flag_dir3
             dir5_next_node( i, op_list) #5
             dir6_next_node( i, op_list) #6
         elif i in boarder3: 
@@ -273,23 +292,33 @@ def build_node(op_list):
                 dir6_cnt = flag_dir1
             if flag_dir3 == -1: #check 3
                 dir4_cnt = 1
+            else :
+                dir4_cnt = flag_dir3
 
             dir5_next_node( i, op_list) #5
             
         elif i in boarder4: 
             if flag_dir1 == -1: #check 1
                 dir6_cnt = 1
+            else :
+                dir6_cnt = flag_dir1
             if flag_dir2 == -1: #check 2
                 dir5_next_node( i, op_list) #5
             else :
                 dir5_cnt = flag_dir2
             if flag_dir3 == -1: #check 3
                 dir4_cnt = 1
+            else :
+                dir4_cnt = flag_dir3
         elif i in boarder5:
             if flag_dir1 == -1: #check 1
                 dir6_cnt = 1
+            else :
+                dir6_cnt = flag_dir1
             if flag_dir2 == -1: #check 2
                 dir5_cnt = 1
+            else :
+                dir5_cnt = flag_dir2
             if flag_dir3 == -1: #check 3
                 dir4_next_node( i, op_list) #4
             else:
@@ -301,6 +330,8 @@ def build_node(op_list):
                 dir6_cnt = flag_dir1
             if flag_dir2 == -1: #check 2
                 dir5_cnt = 1
+            else : 
+                dir5_cnt = flag_dir2
             dir4_next_node( i, op_list) #4
         #get level
         else:
@@ -473,7 +504,10 @@ def check_neighbor(total_list): # my point
     return target 
 
 def get_neighbor(op_list):
-    return check_neighbor(op_list)
+    # should check if the target is in valid or not
+    # implant in dummy
+    target = check_neighbor(op_list)
+    return target
     
 rtlist=[]
 
@@ -482,7 +516,8 @@ total_list = my_list + op_list
 print ("my_list: ", my_list)
 print ("op_list: ", op_list)
 print ("total_list: ", total_list)
-rtlist = get_neighbor(total_list)
+rtlist = build_node(my_list)
 
     
-print (rtlist)
+for i in rtlist:
+    i.print_data()
