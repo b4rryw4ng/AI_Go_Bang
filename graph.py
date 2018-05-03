@@ -10,9 +10,8 @@ class node:
 	def print_p(self):
 		print(self.dir1, self.dir1_cnt, self.dir2, self.dir2_cnt, self.dir3, self.dir3_cnt)
 
-
-op_list = [0,186]
-my_list=[132, 161, 174]
+my_list = [116,132,147, 161]
+op_list= [115,184,185,197,207]
 
 
 h = 9
