@@ -518,6 +518,7 @@ def dead_or_alive_dir1(ID, node_list):
         new_len = 1
     
     return position, new_len
+
 def dead_or_alive_dir2(ID, node_list):
     wanted2 = -1
     wanted5 = -1    
@@ -550,6 +551,7 @@ def dead_or_alive_dir2(ID, node_list):
         new_len = 1
     
     return position, new_len
+
 def dead_or_alive_dir3(ID, node_list):
     wanted3 = -1
     wanted4 = -1    
@@ -744,9 +746,9 @@ def evaluate_function(ID, my_list, op_list, pos, new, dir):## ID is node type, n
                 temp1 = dir3_neighbor(temp1)
             if temp in my_list and temp1 in my_list:
                 evaluation = evaluation + 4000
-            elif temp in my_list and (temp1 in op_list or temp1 == -1):
+            elif temp in my_list:
                 evaluation = evaluation + 2000
-            elif (temp in op_list or temp == -1) and temp1 in my_list:
+            elif temp1 in my_list:
                 evaluation = evaluation + 2000
             elif temp not in op_list and temp != -1 and temp1 not in op_list and temp1 != -1:
                 evaluation = evaluation + 1200
@@ -883,13 +885,13 @@ def evaluate_function(ID, my_list, op_list, pos, new, dir):## ID is node type, n
                     temp_1 = dir3_neighbor(ID.ID)
             else:
                 if dir == 1:
-                    temp_1 = dir1_neighbor(temp)
+                    temp_1 = dir1_neighbor(temp_1)
                 elif dir == 2:
-                    temp_1 = dir2_neighbor(temp)
+                    temp_1 = dir2_neighbor(temp_1)
                 elif dir == 3:
-                    temp_1 = dir3_neighbor(temp)
+                    temp_1 = dir3_neighbor(temp_1)
             if temp_1 in op_list:
-                count_1 = count_1+ 1
+                count_1 = count_1 + 1
             elif temp_1 in my_list or temp_1 == -1:
                 break
         for i in range(4):
@@ -921,15 +923,16 @@ def evaluate_function(ID, my_list, op_list, pos, new, dir):## ID is node type, n
                     temp_1 = dir3_neighbor(ID.ID)
             else:
                 if dir == 1:
-                    temp_1 = dir1_neighbor(temp)
+                    temp_1 = dir1_neighbor(temp_1)
                 elif dir == 2:
-                    temp_1 = dir2_neighbor(temp)
+                    temp_1 = dir2_neighbor(temp_1)
                 elif dir == 3:
-                    temp_1 = dir3_neighbor(temp)
+                    temp_1 = dir3_neighbor(temp_1)
             if temp_1 in op_list:
-                count_4 = count_4+ 1
+                count_4 = count_4 + 1
             elif temp_1 in my_list or temp_1 not in total_list or temp_1 == -1:
                 break
+
         if count == 3:
             evaluation = evaluation + 2400
         if count_1 == 3:
@@ -937,7 +940,7 @@ def evaluate_function(ID, my_list, op_list, pos, new, dir):## ID is node type, n
         count_44 = count4 + count_4
         if count_44 >= 4 and count_44 < 8:
             evaluation = evaluation + 15000
-        elif count == 8:
+        elif count_44 == 8:
             evaluation = evaluation + 30000
 
     return evaluation
@@ -1004,7 +1007,7 @@ def IDS(my_list, op_list, valid_list):
     else:
         return move[-1]
     #return move[a]
-__new_alpha = 0
+
 def dfs(Index, ID, first_move, data, my_list, op_list, valid_list, depth):
     # Index which DFS node
     # ID current op move

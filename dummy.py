@@ -407,7 +407,6 @@ def dir3_neighbor(ID):
     
     return wanted
 
-
 def dir4_neighbor(ID):
     if ID == point8 or ID == point116 or ID == point216:
         return -1
@@ -431,7 +430,6 @@ def dir5_neighbor(ID):
         wanted = ID + level
 
     return wanted
-
 
 def dir6_neighbor(ID):
     level = get_level(ID)
@@ -487,6 +485,7 @@ def check_neighbor(target_list): # my point
                 target.append(f)  
 
     return target 
+
 def get_neighbor(valid_list, target_list):
     # should check if the target is in valid or not
     # implant in dummy
@@ -499,11 +498,608 @@ def get_neighbor(valid_list, target_list):
     return data
 ###### check op neighbor and whether if the neighbor is valid next move
 ###### IDS and Evaluaion function
+__move = -1
+__alpha = -100
+__MAX_depth = 1
 
+def evaluate_function(ID, my_list, op_list, pos, new, dir):## ID is node type, new is the new_length and pos is the position. dir means dir1 or dir2 or dir3
+    total_list = my_list + op_list
+
+    evaluation = 0
+    if dir == 1:
+        if ID.dir1_cnt == 5:
+            evaluation = 1000000
+            return evaluation
+    elif dir == 2:
+        if ID.dir2_cnt == 5:
+            evaluation = 1000000
+            return evaluation
+    elif dir == 3:
+        if ID.dir3_cnt == 5:
+            evaluation = 1000000
+            return evaluation
+
+
+    if new == 4:
+        if pos == 1:
+                num6 = 3
+                num1 = 0
+                num5 = 3
+                num2 = 0
+                num4 = 3
+                num3 = 0
+        elif pos == 2:
+                num6 = 2
+                num1 = 1
+                num5 = 2
+                num2 = 1
+                num4 = 2
+                num3 = 1
+        elif pos == 3:
+                num6 = 1
+                num1 = 2
+                num5 = 1
+                num2 = 2
+                num4 = 1
+                num3 = 2
+        elif pos == 4:
+                num6 = 0
+                num1 = 3
+                num5 = 0
+                num2 = 3
+                num4 = 0
+                num3 = 3
+
+        if dir == 1:
+            temp = dir6_neighbor(ID.ID)
+            for i in range(num6):
+                temp = dir6_neighbor(temp)
+            temp1 = dir1_neighbor(ID.ID)
+            for i in range(num1):
+                temp1 = dir1_neighbor(temp1)
+        elif dir == 2:
+            temp = dir5_neighbor(ID.ID)
+            for i in range(num5):
+                temp = dir5_neighbor(temp)
+            temp1 = dir2_neighbor(ID.ID)
+            for i in range(num2):
+                temp1 = dir2_neighbor(temp1)
+        elif dir == 3:
+            temp = dir4_neighbor(ID.ID)
+            for i in range(num4):
+                temp = dir4_neighbor(temp)
+            temp1 = dir3_neighbor(ID.ID)
+            for i in range(num3):
+                temp1 = dir3_neighbor(temp1)
+
+        if (temp in op_list or temp == -1) and temp1 not in op_list and temp1 != -1:
+            evaluation = evaluation + 2000
+        elif (temp1 in op_list or temp1 == -1) and temp not in op_list and temp != -1:
+            evaluation = evaluation + 2000
+        if temp not in op_list and temp != -1 and temp1 not in op_list and temp1 != -1:
+            evaluation = evaluation + 6000
+
+    elif new == 3:
+        if pos == 1:
+                num6 = 2
+                num1 = 0
+                num5 = 2
+                num2 = 0
+                num4 = 2
+                num3 = 0
+        elif pos == 2:
+                num6 = 1
+                num1 = 1
+                num5 = 1
+                num2 = 1
+                num4 = 1
+                num3 = 1
+        elif pos == 3:
+                num6 = 0
+                num1 = 2
+                num5 = 0
+                num2 = 2
+                num4 = 0
+                num3 = 2
+        if dir == 1:
+            temp = dir6_neighbor(ID.ID)
+            for i in range(num6):
+                temp = dir6_neighbor(temp)
+            temp1 = dir1_neighbor(ID.ID)
+            for i in range(num1):
+                temp1 = dir1_neighbor(temp1)
+        elif dir == 2:
+            temp = dir5_neighbor(ID.ID)
+            for i in range(num5):
+                temp = dir5_neighbor(temp)
+            temp1 = dir2_neighbor(ID.ID)
+            for i in range(num2):
+                temp1 = dir2_neighbor(temp1)
+        elif dir == 3:
+            temp = dir4_neighbor(ID.ID)
+            for i in range(num4):
+                temp = dir4_neighbor(temp)
+            temp1 = dir3_neighbor(ID.ID)
+            for i in range(num3):
+                temp1 = dir3_neighbor(temp1)
+
+        if (temp in op_list or temp == -1) and temp1 not in op_list and temp1 != -1:
+            if dir == 1:
+                temp1 = dir1_neighbor(temp1)
+            if dir == 2:
+                temp1 = dir2_neighbor(temp1)
+            if dir == 3:
+                temp1 = dir3_neighbor(temp1)
+            if temp1 in my_list:
+                evaluation = evaluation + 2000
+            elif temp1 not in op_list and temp1 != -1:
+                evaluation = evaluation + 400
+        elif temp not in op_list and temp != -1 and (temp1 in op_list or temp1 == -1):
+            if dir == 1:
+                temp = dir6_neighbor(temp)
+            if dir == 2:
+                temp = dir5_neighbor(temp)
+            if dir == 3:
+                temp = dir4_neighbor(temp)
+            if temp in my_list:
+                evaluation = evaluation + 2000
+            elif temp not in op_list and temp != -1:
+                evaluation = evaluation + 400
+        elif temp not in op_list and temp != -1 and temp1 not in op_list and temp1 != -1:
+            if dir == 1:
+                temp = dir6_neighbor(temp)
+                temp1 = dir1_neighbor(temp1)
+            if dir == 2:
+                temp = dir5_neighbor(temp)
+                temp1 = dir2_neighbor(temp1)
+            if dir == 3:
+                temp = dir4_neighbor(temp)
+                temp1 = dir3_neighbor(temp1)
+            if temp in my_list and temp1 in my_list:
+                evaluation = evaluation + 4000
+            elif temp in my_list:
+                evaluation = evaluation + 2000
+            elif temp1 in my_list:
+                evaluation = evaluation + 2000
+            elif temp not in op_list and temp != -1 and temp1 not in op_list and temp1 != -1:
+                evaluation = evaluation + 1200
+
+    elif new == 2:
+
+        if pos == 1:
+                num6 = 1
+                num1 = 0
+                num5 = 1
+                num2 = 0
+                num4 = 1
+                num3 = 0
+        elif pos == 2:
+                num6 = 0
+                num1 = 1
+                num5 = 0
+                num2 = 1
+                num4 = 0
+                num3 = 1
+
+        if dir == 1:
+            temp = dir6_neighbor(ID.ID)
+            for i in range(num6):
+                temp = dir6_neighbor(temp)
+            temp1 = dir1_neighbor(ID.ID)
+            for i in range(num1):
+                temp1 = dir1_neighbor(temp1)
+        elif dir == 2:
+            temp = dir5_neighbor(ID.ID)
+            for i in range(num5):
+                temp = dir5_neighbor(temp)
+            temp1 = dir2_neighbor(ID.ID)
+            for i in range(num2):
+                temp1 = dir2_neighbor(temp1)
+        elif dir == 3:
+            temp = dir4_neighbor(ID.ID)
+            for i in range(num4):
+                temp = dir4_neighbor(temp)
+            temp1 = dir3_neighbor(ID.ID)
+            for i in range(num3):
+                temp1 = dir3_neighbor(temp1)
+        if (temp in op_list or temp == -1) and temp1 not in op_list and temp1 != -1:
+            if dir == 1:
+                temp1 = dir1_neighbor(temp1)
+                temp11 = dir1_neighbor(temp1)
+            elif dir == 2:
+                temp1 = dir2_neighbor(temp1)
+                temp11 = dir2_neighbor(temp1)
+            elif dir == 3:
+                temp1 = dir3_neighbor(temp1)
+                temp11 = dir3_neighbor(temp1)
+            if temp1 in my_list and temp11 in my_list:
+                evaluation = evaluation + 2000
+        elif temp not in op_list and temp != -1 and (temp1 in op_list or temp1 == -1):
+            if dir == 1:
+                temp = dir6_neighbor(temp)
+                temp_1 = dir6_neighbor(temp)
+            elif dir == 2:
+                temp = dir5_neighbor(temp)
+                temp_1 = dir5_neighbor(temp)
+            elif dir == 3:
+                temp = dir4_neighbor(temp)
+                temp_1 = dir4_neighbor(temp)
+            if temp in my_list and temp_1 in my_list:
+                evaluation = evaluation + 2000
+        elif temp not in op_list and temp != -1 and temp1 not in op_list and temp1 != -1:
+            if dir == 1:
+                temp = dir6_neighbor(temp)
+                temp_1 = dir6_neighbor(temp)
+                temp1 = dir1_neighbor(temp1)
+                temp11 = dir1_neighbor(temp1)
+            elif dir == 2:
+                temp = dir5_neighbor(temp)
+                temp_1 = dir5_neighbor(temp)
+                temp1 = dir2_neighbor(temp1)
+                temp11 = dir2_neighbor(temp1)
+            elif dir == 3:
+                temp = dir4_neighbor(temp)
+                temp_1 = dir4_neighbor(temp)
+                temp1 = dir3_neighbor(temp1)
+                temp11 = dir3_neighbor(temp1)
+            if temp in my_list and temp_1 in my_list:
+                if temp1 in my_list and temp11 in my_list:
+                    evaluation = evaluation + 4000
+                elif temp1 in my_list and  temp11 not in op_list and temp11 != -1:
+                    evaluation = evaluation + 3200
+                elif temp11 in my_list and  temp1 not in op_list and temp1 != -1:
+                    evaluation = evaluation + 2400
+                elif temp1 not in op_list and temp1 != -1 and temp11 not in op_list and temp11 != -1:
+                    evaluation = evaluation + 2500
+            elif temp in my_list and  temp_1 not in op_list and temp_1 != -1:
+                if temp1 in my_list and temp11 in my_list:
+                    evaluation = evaluation + 3200
+            elif temp_1 in my_list and  temp not in op_list and temp != -1:
+                if temp1 in my_list and temp11 in my_list:
+                    evaluation = evaluation + 2400
+            elif temp not in op_list and  temp != -1 and temp_1 not in op_list and temp_1 != -1:
+                if temp1 in my_list and temp11 in my_list:
+                    evaluation = evaluation + 2500
+
+    elif new == 1:
+        count = 0
+        count_1 = 0
+        count4 = 0
+        count_4 = 0
+        count_44 = 0
+        for i in range(4):
+            if i == 0:
+                if dir == 1:
+                    temp = dir6_neighbor(ID.ID)
+                elif dir == 2:
+                    temp = dir5_neighbor(ID.ID)
+                elif dir == 3:
+                    temp = dir4_neighbor(ID.ID)
+            else:
+                if dir == 1:
+                    temp = dir6_neighbor(temp)
+                elif dir == 2:
+                    temp = dir5_neighbor(temp)
+                elif dir == 3:
+                    temp = dir4_neighbor(temp)
+            if temp in op_list:
+                count = count + 1
+            elif temp in my_list or temp == -1:
+                break
+        for i in range(4):
+            if i == 0:
+                if dir == 1:
+                    temp_1 = dir1_neighbor(ID.ID)
+                elif dir == 2:
+                    temp_1 = dir2_neighbor(ID.ID)
+                elif dir == 3:
+                    temp_1 = dir3_neighbor(ID.ID)
+            else:
+                if dir == 1:
+                    temp_1 = dir1_neighbor(temp_1)
+                elif dir == 2:
+                    temp_1 = dir2_neighbor(temp_1)
+                elif dir == 3:
+                    temp_1 = dir3_neighbor(temp_1)
+            if temp_1 in op_list:
+                count_1 = count_1 + 1
+            elif temp_1 in my_list or temp_1 == -1:
+                break
+        for i in range(4):
+            if i == 0:
+                if dir == 1:
+                    temp = dir6_neighbor(ID.ID)
+                elif dir == 2:
+                    temp = dir5_neighbor(ID.ID)
+                elif dir == 3:
+                    temp = dir4_neighbor(ID.ID)
+            else:
+                if dir == 1:
+                    temp = dir6_neighbor(temp)
+                elif dir == 2:
+                    temp = dir5_neighbor(temp)
+                elif dir == 3:
+                    temp = dir4_neighbor(temp)
+            if temp in op_list:
+                count4 = count4 + 1
+            elif temp in my_list or temp not in total_list or temp == -1:
+                break
+        for i in range(4):
+            if i == 0:
+                if dir == 1:
+                    temp_1 = dir1_neighbor(ID.ID)
+                elif dir == 2:
+                    temp_1 = dir2_neighbor(ID.ID)
+                elif dir == 3:
+                    temp_1 = dir3_neighbor(ID.ID)
+            else:
+                if dir == 1:
+                    temp_1 = dir1_neighbor(temp_1)
+                elif dir == 2:
+                    temp_1 = dir2_neighbor(temp_1)
+                elif dir == 3:
+                    temp_1 = dir3_neighbor(temp_1)
+            if temp_1 in op_list:
+                count_4 = count_4 + 1
+            elif temp_1 in my_list or temp_1 not in total_list or temp_1 == -1:
+                break
+
+        if count == 3:
+            evaluation = evaluation + 2400
+        if count_1 == 3:
+            evaluation = evaluation + 2400
+        count_44 = count4 + count_4
+        if count_44 >= 4 and count_44 < 8:
+            evaluation = evaluation + 15000
+        elif count_44 == 8:
+            evaluation = evaluation + 30000
+
+    return evaluation
+
+def IDS(my_list, op_list, valid_list):
+    #data neighbor in valid move 
+    # all input is raw data
+    #start is the time 
+    global __move, __alpha, __new_alpha
+    global __Start, __MAX_depth
+    depth = 0
+    move = []
+    while True:
+        #print ("in while")
+        # control max depth 
+        __MAX_depth += 1
+        #print ("__MAX_depth : ",__MAX_depth)
+
+        data = []
+        
+        dfs(-1, -1, -1, data, my_list, op_list, valid_list, 0)
+        #print("in IDS return __move : ",__move)
+        move.append(__move)
+        __alpha = -100
+        __move = -1
+        
+        if t.time() - __Start > __Time_limit:
+            #__Time_flag = 1
+            print (t.time() - __Start)
+            break # set timer
+        #if __MAX_depth == 3:
+        #    break
+    print (__MAX_depth, __Time_flag)
+    if __Time_flag:
+        return move[-2]
+    else:
+        return move[-1]
+    #return move[a]
+
+def dfs(Index, ID, first_move, data, my_list, op_list, valid_list, depth):
+    # Index which DFS node
+    # ID current op move
+    # first_move the appropriate move
+    global __MAX_depth
+    global __move, __alpha, __new_alpha 
+    global __Time_flag
+    if __Time_flag:
+        return 
+    if t.time() - __Start > __Time_limit:
+        __Time_flag = 1
+        return 
+
+    if depth == __MAX_depth:
+        if Index == 0:
+            alpha = evaluation_function_full(data, my_list, op_list)
+            # data current this position 
+            __alpha = alpha
+            __move = first_move
+            #print (__alpha)
+        else :
+            flag, alpha = evaluation_function_a_B(data, my_list, op_list)
+            if flag == 0:
+                __alpha = alpha
+                __move = first_move
+        #print ("__move", __move, "alpha ",__alpha)
+        return
+    else :
+        depth += 1
+    
+    temp_op_list = op_list.copy()
+    temp_my_list = my_list.copy()
+
+    if depth %2 == 1 :
+        # if len my > op 0 is my turn
+        # my turn 
+        # update op
+        # find my neighbor
+        if ID != -1:    
+            for index, i in enumerate(op_list):
+                if i > ID and ID != -1:          
+                    temp_op_list.insert(index, ID)
+                    #print ("add ID ", ID, " in temp_op_list ", temp_op_list )
+                    break
+
+        data = get_neighbor_dfs(valid_list, my_list, ID)
+        #print ("my_list data:", data)
+    
+    else:
+        # op turn 
+        #update op
+        #find my neighbor
+        if ID != -1:
+            for index, i in enumerate(my_list):
+                if i > ID:          
+                    temp_my_list.insert(index, ID)
+                    #print ("add ID ", ID, " in temp_my_list ", temp_my_list )
+                    break
+        data = get_neighbor_dfs(valid_list, op_list, ID)
+        #print ("op_list data:", data)
+
+    if depth %2 == 1:
+        # my turn
+        for index, i in enumerate(data):
+            
+            if depth == 1:
+                first_move = i
+                #print ("first_move:", first_move)
+
+            #print("current index :" , index, "value : ", i, "depth :", depth)
+            dfs(index, i, first_move, data, my_list, temp_op_list, valid_list, depth)
+    else :
+        for index, i in enumerate(data):
+            
+            if depth == 1:
+                first_move = i
+                #print ("first_move:", first_move)
+            #print("current index :" , index, "value : ", i, "depth :", depth)
+            dfs(index, i, first_move, data, op_list, temp_my_list, valid_list, depth)
+
+    return
+
+def evaluation_function_full(data, my_list, op_list):
+    global __Time_flag
+    min_value = -100
+    #print ("index 1 evaluation fucntion")
+    
+    if __Time_flag:
+        #print (1)
+        return min_value 
+        # 1 dead-end 
+    if t.time() - __Start > __Time_limit:
+        __Time_flag = 1
+        #print (2)
+        return min_value 
+
+    data_node = build_node(my_list)
+    #print ("in evaluation full data ", data)
+    #print ("in evaluation full my_list ", my_list)
+    
+    for ID in data:
+        temp_my_list = my_list.copy()
+        for index, i in enumerate(temp_my_list):
+            if i > ID :
+                temp_my_list.insert(index, ID)
+                break
+            
+        current_dir1_pos, dir1_case, current_dir2_pos, dir2_case, current_dir3_pos, dir3_case = \
+            dead_or_alive(ID, data_node)
+
+        data_node = build_node(temp_my_list)
+        temp = data_node[0] #initialize
+
+        for i in data_node:
+            if i.ID == ID:
+                temp = i
+                break
+        #temp.print_data()
+        # temp is current node 
+
+        evaluate1 = evaluate_function(temp, my_list, op_list, current_dir1_pos, dir1_case, 1)
+        evaluate2 = evaluate_function(temp, my_list, op_list, current_dir2_pos, dir2_case, 2)
+        evaluate3 = evaluate_function(temp, my_list, op_list, current_dir3_pos, dir3_case, 3)
+        evaluated = evaluate1 + evaluate2 + evaluate3
+
+        if min_value == -100 or min_value == 0 : 
+            min_value = evaluated
+
+        #print ("min_value : ",evaluated)
+        if min_value > evaluated:
+            min_value = evaluated
+    #print (3)
+    if min_value == 0:
+        min_value = 10
+    return min_value
+    # 1 set up new alpha 
+
+def evaluation_function_a_B(data, my_list, op_list):
+    #print ("evaluation fucntion a B")
+    global __Time_flag
+    alpha = __alpha
+    if __Time_flag:
+        return 1, alpha 
+        # 1 dead-end 
+    if t.time() - __Start > __Time_limit:
+        __Time_flag = 1
+        return 1, alpha 
+    
+    data_node = build_node(my_list)
+
+    min_value = -100
+    min_move = -1
+    #print ("in evaluation a_B data ", data)
+    #print ("in evaluation a_B my_list ", my_list)
+    for ID in data:
+        temp_my_list = my_list.copy()
+        for index, i in enumerate(temp_my_list):
+            if i > ID :
+                temp_my_list.insert(index, ID)
+                break
+            
+        current_dir1_pos, dir1_case, current_dir2_pos, dir2_case, current_dir3_pos, dir3_case = \
+            dead_or_alive(ID, data_node)
+
+        data_node = build_node(temp_my_list)
+        temp = data_node[0] #initialize
+
+        for i in data_node:
+            if i.ID == ID:
+                temp = i
+                break
+        #temp.print_data()
+        # temp is current node 
+
+        evaluate1 = evaluate_function(temp, my_list, op_list, current_dir1_pos, dir1_case, 1)
+        evaluate2 = evaluate_function(temp, my_list, op_list, current_dir2_pos, dir2_case, 2)
+        evaluate3 = evaluate_function(temp, my_list, op_list, current_dir3_pos, dir3_case, 3)
+        evaluated = evaluate1 + evaluate2 + evaluate3
+        
+        if min_value == -100 or min_value == 0: 
+            min_value = evaluated
+        
+
+        if min_value < evaluated:
+            min_value = evaluated
+        
+        if alpha > min_value and evaluated != 0:
+            #print ("got purning ", min_value)
+            return 1, alpha
+    
+    if alpha < min_value:
+        return 0, min_value
+    # after all iteration, the min value is larger than current alpha, update alpha    
+    #print ("finish but no min_value", min_value)
+    return 1, alpha
+
+def get_neighbor_dfs(valid_list, target_list, ID):
+    target = check_neighbor(target_list)
+    data = []
+    for i in target:
+        if i in valid_list and i != ID:
+            data.append(i)
+    data = sorted(data)
+    #finish sorting
+    return data    
 
 ###### IDS and Evaluaion function
 ###### Time
-__Start = t.time()
+__Start = 0 
 __Time_flag = 0
 ###### Time
 ###### Dead or Alive
@@ -540,6 +1136,7 @@ def dead_or_alive_dir1(ID, node_list):
         new_len = 1
     
     return position, new_len
+
 def dead_or_alive_dir2(ID, node_list):
     wanted2 = -1
     wanted5 = -1    
@@ -572,6 +1169,7 @@ def dead_or_alive_dir2(ID, node_list):
         new_len = 1
     
     return position, new_len
+
 def dead_or_alive_dir3(ID, node_list):
     wanted3 = -1
     wanted4 = -1    
@@ -612,387 +1210,7 @@ def dead_or_alive(ID, node_list):
     return current_dir1_pos, dir1_case, current_dir2_pos, dir2_case, current_dir3_pos, dir3_case
 
 ###### Dead or Alive
-###### Evaluation function
-def evaluation_function(ID,my_list,op_list,new,pos,dir):## ID is node type, new is the new_length and pos is the position. dir means dir1 or dir2 or dir3
-    total_list = my_list + op_list
-    evaluation = 0
-    if ID.dir1_cnt == 5 or ID.dir2_cnt == 5 or ID.dir3_cnt == 5:
-        evaluation = 1000000
-        return evaluation
 
-    #dir_1
-    if dir == 1:
-
-        if new == 4:
-            if pos == 1:
-                num6 = 0
-                num1 = 3
-            elif pos == 2:
-                num6 = 1
-                num1 = 2
-            elif pos == 3:
-                num6 = 2
-                num1 = 1
-            elif pos == 4:
-                num6 = 3
-                num1 = 0
-
-            temp = dir6_neighbor(ID.ID)
-            for i in range(num6):
-                temp = dir6_neighbor(temp)
-                if temp in op_list:
-                    evaluation = evaluation + 2000
-                else:
-                    temp = dir1_neighbor(ID)
-                    for i in range(num1):
-                        temp = dir1_neighbor(temp)
-                    if temp in op_list:
-                        evaluation = evaluation + 2000
-                    else:
-                        evaluation = evaluation + 6000
-
-        elif new == 3:
-            if pos == 1:
-                num6 = 0
-                num1 = 2
-            elif pos == 2:
-                num6 = 1
-                num1 = 1
-            elif pos == 3:
-                num6 = 2
-                num1 = 0
-
-
-            temp = dir6_neighbor(ID.ID)
-            for i in range(num6):
-                temp = dir6_neighbor(temp)
-            temp1 = dir1_neighbor(ID.ID)
-            for i in range(num1):
-                temp1 = dir1_neighbor(temp1)
-
-            if temp in op_list and temp1 not in op_list:
-                temp1 = dir1_neighbor(temp1)
-                if temp1 in my_list:
-                    evaluation = evaluation + 2000
-                elif temp1 not in op_list:
-                    evaluation = evaluation + 400
-            elif temp not in op_list and temp1 in op_list:
-                temp = dir6_neighbor(temp)
-                if temp in my_list:
-                    evaluation = evaluation + 2000
-                elif temp not in op_list:
-                    evaluation = evaluation + 400
-            else:
-                temp = dir6_neighbor(temp)
-                temp1 = dir1_neighbor(temp)
-                if temp in my_list and temp1 in my_list:
-                    evaluation = evaluation + 4000
-                if temp in my_list and temp1 not in my_list:
-                    evaluation = evaluation + 2000
-                if temp not in my_list and temp1 in my_list:
-                    evaluation = evaluation + 2000
-                else:
-                    evaluation = evaluation + 1200
-
-        elif new == 2:
-
-            if pos == 1:
-                num6 = 0
-                num1 = 1
-            elif pos == 2:
-                num6 = 1
-                num1 = 0
-
-            temp = dir6_neighbor(ID.ID)
-            for i in range(num6):
-                temp = dir6_neighbor(temp)
-            temp1 = dir1_neighbor(ID.ID)
-            for i in range(num1):
-                temp1 = dir1_neighbor(temp1)
-
-            if temp in op_list and temp1 not in op_list:
-                temp1 = dir1_neighbor(temp1)
-                temp11 = dir1_neighbor(temp1)
-                if temp1 in my_list and temp11 in my_list:
-                    evaluation = evaluation + 2000
-            elif temp not in op_list and temp1 in op_list:
-                temp = dir6_neighbor(temp)
-                temp_1 = dir6_neighbor(temp)
-                if temp in my_list and temp_1 in my_list:
-                    evaluation = evaluation + 2000
-            else:
-                temp = dir6_neighbor(temp)
-                temp_1 = dir6_neighbor(temp)
-                temp1 = dir1_neighbor(temp1)
-                temp11 = dir1_neighbor(temp1)
-                if temp in my_list and temp_1 in my_list:
-                    if temp1 in my_list and temp11 in my_list:
-                        evaluation = evaluation + 4000
-                    elif temp1 in my_list and  temp11 not in total_list:
-                        evaluation = evaluation + 3200
-                    elif temp11 in my_list and  temp1 not in total_list:
-                        evaluation = evaluation + 2400
-                    elif temp1 not in total_list and temp11 not in total_list:
-                        evaluation = evaluation + 2500
-                elif temp in my_list and  temp_1 not in total_list:
-                    if temp1 in my_list and temp11 in my_list:
-                        evaluation = evaluation + 3200
-                elif temp_1 in my_list and  temp not in total_list:
-                    if temp1 in my_list and temp11 in my_list:
-                        evaluation = evaluation + 2400
-                elif temp not in total_list and  temp_1 not in total_list:
-                    if temp1 in my_list and temp11 in my_list:
-                        evaluation = evaluation + 2500
-
-
-    elif dir == 2:
-
-        if new == 4:
-            if pos == 1:
-                num5 = 0
-                num2 = 3
-            elif pos == 2:
-                num5 = 1
-                num2 = 2
-            elif pos == 3:
-                num5 = 2
-                num2 = 1
-            elif pos == 4:
-                num5 = 3
-                num2 = 0
-
-            temp = dir5_neighbor(ID.ID)
-            for i in range(num5):
-                temp = dir5_neighbor(temp)
-                if temp in op_list:
-                    evaluation = evaluation + 2000
-                else:
-                    temp = dir2_neighbor(ID.ID)
-                    for i in range(num2):
-                        temp = dir2_neighbor(temp)
-                    if temp in op_list:
-                        evaluation = evaluation + 2000
-                    else:
-                        evaluation = evaluation + 6000
-
-        elif new == 3:
-            if pos == 1:
-                num5 = 0
-                num2 = 2
-            elif pos == 2:
-                num5 = 1
-                num2 = 1
-            elif pos == 3:
-                num5 = 2
-                num2 = 0
-
-
-            temp = dir5_neighbor(ID.ID)
-            for i in range(num5):
-                temp = dir5_neighbor(temp)
-            temp1 = dir2_neighbor(ID.ID)
-            for i in range(num2):
-                temp1 = dir2_neighbor(temp1)
-
-            if temp in op_list and temp1 not in op_list:
-                temp1 = dir2_neighbor(temp1)
-                if temp1 in my_list:
-                    evaluation = evaluation + 2000
-                elif temp1 not in op_list:
-                    evaluation = evaluation + 400
-            elif temp not in op_list and temp1 in op_list:
-                temp = dir5_neighbor(temp)
-                if temp in my_list:
-                    evaluation = evaluation + 2000
-                elif temp not in op_list:
-                    evaluation = evaluation + 400
-            else:
-                temp = dir5_neighbor(temp)
-                temp1 = dir2_neighbor(temp)
-                if temp in my_list and temp1 in my_list:
-                    evaluation = evaluation + 4000
-                if temp in my_list and temp1 not in my_list:
-                    evaluation = evaluation + 2000
-                if temp not in my_list and temp1 in my_list:
-                    evaluation = evaluation + 2000
-                else:
-                    evaluation = evaluation + 1200
-
-        elif new == 2:
-
-            if pos == 1:
-                num5 = 0
-                num2 = 1
-            elif pos == 2:
-                num5 = 1
-                num2 = 0
-
-            temp = dir5_neighbor(ID.ID)
-            for i in range(num5):
-                temp = dir6_neighbor(temp)
-            temp1 = dir2_neighbor(ID.ID)
-            for i in range(num2):
-                temp1 = dir1_neighbor(temp1)
-
-            if temp in op_list and temp1 not in op_list:
-                temp1 = dir2_neighbor(temp1)
-                temp11 = dir2_neighbor(temp1)
-                if temp1 in my_list and temp11 in my_list:
-                    evaluation = evaluation + 2000
-            elif temp not in op_list and temp1 in op_list:
-                temp = dir5_neighbor(temp)
-                temp_1 = dir5_neighbor(temp)
-                if temp in my_list and temp_1 in my_list:
-                    evaluation = evaluation + 2000
-            else:
-                temp = dir5_neighbor(temp)
-                temp_1 = dir5_neighbor(temp)
-                temp1 = dir2_neighbor(temp1)
-                temp11 = dir2_neighbor(temp1)
-                if temp in my_list and temp_1 in my_list:
-                    if temp1 in my_list and temp11 in my_list:
-                        evaluation = evaluation + 4000
-                    elif temp1 in my_list and  temp11 not in total_list:
-                        evaluation = evaluation + 3200
-                    elif temp11 in my_list and  temp1 not in total_list:
-                        evaluation = evaluation + 2400
-                    elif temp1 not in total_list and  temp11 not in total_list:
-                        evaluation = evaluation + 2500
-                elif temp in my_list and  temp_1 not in total_list:
-                    if temp1 in my_list and temp11 in my_list:
-                        evaluation = evaluation + 3200
-                elif temp_1 in my_list and  temp not in total_list:
-                    if temp1 in my_list and temp11 in my_list:
-                        evaluation = evaluation + 2400
-                elif temp not in total_list and  temp_1 not in total_list:
-                    if temp1 in my_list and temp11 in my_list:
-                        evaluation = evaluation + 2500
-
-    if dir == 3:
-
-        if new == 4:
-            if pos == 1:
-                num4 = 0
-                num3 = 3
-            elif pos == 2:
-                num4 = 1
-                num3 = 2
-            elif pos == 3:
-                num4 = 2
-                num3 = 1
-            elif pos == 4:
-                num4 = 3
-                num3 = 0
-
-            temp = dir4_neighbor(ID.ID)
-            for i in range(num3):
-                temp = dir4_neighbor(temp)
-                if temp in op_list:
-                    evaluation = evaluation + 2000
-                else:
-                    temp = dir3_neighbor(ID.ID)
-                    for i in range(num3):
-                        temp = dir3_neighbor(temp)
-                    if temp in op_list:
-                        evaluation = evaluation + 2000
-                    else:
-                        evaluation = evaluation + 6000
-
-        elif new == 3:
-            if pos == 1:
-                num4 = 0
-                num3 = 2
-            elif pos == 2:
-                num4 = 1
-                num3 = 1
-            elif pos == 3:
-                num4 = 2
-                num3 = 0
-
-
-            temp = dir4_neighbor(ID.ID)
-            for i in range(num4):
-                temp = dir4_neighbor(temp)
-            temp1 = dir3_neighbor(ID.ID)
-            for i in range(num3):
-                temp1 = dir3_neighbor(temp1)
-
-            if temp in op_list and temp1 not in op_list:
-                temp1 = dir3_neighbor(temp1)
-                if temp1 in my_list:
-                    evaluation = evaluation + 2000
-                elif temp1 not in op_list:
-                    evaluation = evaluation + 400
-            elif temp not in op_list and temp1 in op_list:
-                temp = dir4_neighbor(temp)
-                if temp in my_list:
-                    evaluation = evaluation + 2000
-                elif temp not in op_list:
-                    evaluation = evaluation + 400
-            else:
-                temp = dir4_neighbor(temp)
-                temp1 = dir3_neighbor(temp)
-                if temp in my_list and temp1 in my_list:
-                    evaluation = evaluation + 4000
-                if temp in my_list and temp1 not in my_list:
-                    evaluation = evaluation + 2000
-                if temp not in my_list and temp1 in my_list:
-                    evaluation = evaluation + 2000
-                else:
-                    evaluation = evaluation + 1200
-
-        elif new == 2:
-
-            if pos == 1:
-                num4 = 0
-                num3 = 1
-            elif pos == 2:
-                num4 = 1
-                num3 = 0
-
-            temp = dir4_neighbor(ID.ID)
-            for i in range(num4):
-                temp = dir4_neighbor(temp)
-            temp1 = dir3_neighbor(ID.ID)
-            for i in range(num3):
-                temp1 = dir3_neighbor(temp1)
-
-            if temp in op_list and temp1 not in op_list:
-                temp1 = dir3_neighbor(temp1)
-                temp11 = dir3_neighbor(temp1)
-                if temp1 in my_list and temp11 in my_list:
-                    evaluation = evaluation + 2000
-            elif temp not in op_list and temp1 in op_list:
-                temp = dir4_neighbor(temp)
-                temp_1 = dir4_neighbor(temp)
-                if temp in my_list and temp_1 in my_list:
-                    evaluation = evaluation + 2000
-            else:
-                temp = dir4_neighbor(temp)
-                temp_1 = dir4_neighbor(temp)
-                temp1 = dir3_neighbor(temp1)
-                temp11 = dir3_neighbor(temp1)
-                if temp in my_list and temp_1 in my_list:
-                    if temp1 in my_list and temp11 in my_list:
-                        evaluation = evaluation + 4000
-                    elif temp1 in my_list and  temp11 not in total_list:
-                        evaluation = evaluation + 3200
-                    elif temp11 in my_list and  temp1 not in total_list:
-                        evaluation = evaluation + 2400
-                    elif temp1 not in total_list and  temp11 not in total_list:
-                        evaluation = evaluation + 2500
-                elif temp in my_list and  temp_1 not in total_list:
-                    if temp1 in my_list and temp11 in my_list:
-                        evaluation = evaluation + 3200
-                elif temp_1 in my_list and  temp not in total_list:
-                    if temp1 in my_list and temp11 in my_list:
-                        evaluation = evaluation + 2400
-                elif temp not in total_list and  temp_1 not in total_list:
-                    if temp1 in my_list and temp11 in my_list:
-                        evaluation = evaluation + 2500
-
-    return evaluation
-###### Evaluation function
 class Agent:
     """
     Game agent.
@@ -1089,13 +1307,9 @@ class Agent:
         raw_op_list = self.get_opponent_pos()
         raw_valid_list = self.get_valid_pos()
 
-        #op_list = build_node(raw_op_list) #input a list of data
-        #op_list is node list with directional commutation
-
-        data = get_neighbor(raw_valid_list,raw_op_list)
-        pos = IDS(data,raw_my_list,raw_op_list)
+        pos = IDS(raw_my_list, raw_op_list, raw_valid_list)
         #Minimax(self.get_valid_pos(), oplist, alpha, depth)
-        return self.valid_pos[randint(0, len(self.valid_pos)-1)]
+        return pos
 
     def _write_move(self, pos):
         """
