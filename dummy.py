@@ -503,8 +503,118 @@ def get_neighbor(valid_list, op_list):
 
 ###### IDS and Evaluaion function
 ###### Time
-
+__Start = t.time()
+__Time_flag = 0
 ###### Time
+###### Dead or Alive
+   
+def dead_or_alive_dir1(ID, node_list):
+    wanted1 = -1
+    wanted6 = -1    
+    wanted1 = dir1_neighbor(ID) # if any neighbor exist    
+    wanted6 = dir6_neighbor(ID)
+
+    doa_dir1 = -1
+    doa_dir6 = -1
+    position = -1
+
+    for i in node_list:
+        if node.ID == wanted1:
+            doa_dir1 = i.dir1_cnt
+        if node.ID == wanted6:
+            doa_dir6 = i.dir1_cnt
+    
+    if doa_dir1 != -1 and doa_dir6 != -1:
+        # yes yes 
+        new_len = doa_dir1 + doa_dir6 + 1
+        position = doa_dir1 + 1
+    elif doa_dir1 != -1 or doa_dir6 != -1:
+        if doa_dir1 == -1:
+            new_len = doa_dir6 + 1
+            position = 1
+        else :
+            position = doa_dir1 + 1 
+            new_len = doa_dir1 + 1
+    else :
+        position = 1
+        new_len = 1
+    
+    return position, new_len
+def dead_or_alive_dir2(ID, node_list):
+    wanted2 = -1
+    wanted5 = -1    
+    wanted2 = dir2_neighbor(ID) # if any neighbor exist    
+    wanted5 = dir5_neighbor(ID)
+
+    doa_dir2 = -1
+    doa_dir5 = -1
+    position = -1
+
+    for node in node_list:
+        if node.ID == wanted2:
+            doa_dir2 = i.dir2_cnt
+        if node.ID == wanted5:
+            doa_dir5 = i.dir2_cnt
+    
+    if doa_dir2 != -1 and doa_dir5 != -1:
+        # yes yes 
+        new_len = doa_dir2 + doa_dir5 + 1
+        position = doa_dir2 + 1
+    elif doa_dir2 != -1 or doa_dir5 != -1:
+        if doa_dir2 == -1:
+            new_len = doa_dir5 + 1
+            position = 1
+        else :
+            position = doa_dir2 + 1 
+            new_len = doa_dir2 + 1
+    else :
+        position = 1
+        new_len = 1
+    
+    return position, new_len
+def dead_or_alive_dir3(ID, node_list):
+    wanted3 = -1
+    wanted4 = -1    
+    wanted3 = dir3_neighbor(ID) # if any neighbor exist    
+    wanted4 = dir4_neighbor(ID)
+
+    doa_dir3 = -1
+    doa_dir4 = -1
+    position = -1
+
+    for node in node_list:
+        if node.ID == wanted3:
+            doa_dir3 = i.dir3_cnt
+        if node.ID == wanted4:
+            doa_dir4 = i.dir3_cnt
+    
+    if doa_dir3 != -1 and doa_dir4 != -1:
+        # yes yes 
+        new_len = doa_dir3 + doa_dir4 + 1
+        position = doa_dir3 + 1
+    elif doa_dir3 != -1 or doa_dir4 != -1:
+        if doa_dir3 == -1:
+            new_len = doa_dir4 + 1
+            position = 1
+        else :
+            position = doa_dir3 + 1 
+            new_len = doa_dir3 + 1
+    else :
+        position = 1
+        new_len = 1
+    
+    return position, new_len
+
+def dead_or_alive(ID, node_list):
+    current_dir1_pos, dir1_case = dead_or_alive_dir1(ID, node_list)   
+    current_dir2_pos, dir2_case = dead_or_alive_dir2(ID, node_list)
+    current_dir3_pos, dir3_case = dead_or_alive_dir3(ID, node_list)
+    return current_dir1_pos, dir1_case, current_dir2_pos, dir2_case, current_dir3_pos, dir3_case
+
+###### Dead or Alive
+###### Evaluation function
+
+###### Evaluation function
 class Agent:
     """
     Game agent.
@@ -583,7 +693,7 @@ class Agent:
         self._write_move(pos)
 
     def _get_next_move(self):
-
+       
         """
         Get a position from valid_pos randomly.
         You should implement your algorithm here.
@@ -595,7 +705,8 @@ class Agent:
 
         Check them below for more detail
         """
-        start = t.time()
+        global __Start
+        __Start = t.time()
         raw_my_list = self.get_my_pos()
         raw_op_list = self.get_opponent_pos()
         raw_valid_list = self.get_valid_pos()
@@ -604,7 +715,7 @@ class Agent:
         #op_list is node list with directional commutation
 
         data = get_neighbor(raw_valid_list,raw_op_list)
-        pos = IDS(start,data,raw_my_list,raw_op_list)
+        pos = IDS(data,raw_my_list,raw_op_list)
         #Minimax(self.get_valid_pos(), oplist, alpha, depth)
         return self.valid_pos[randint(0, len(self.valid_pos)-1)]
 
