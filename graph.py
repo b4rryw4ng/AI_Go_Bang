@@ -11,7 +11,8 @@ class node:
 		print(self.dir1, self.dir1_cnt, self.dir2, self.dir2_cnt, self.dir3, self.dir3_cnt)
 
 
-
+op_list = [0,186]
+my_list=[132, 161, 174]
 
 
 h = 9
@@ -30,23 +31,12 @@ for i in range(217):
 	elif i < 100:
 		print (' ', end = '')
 
-	if i >= 60 and i<= 63:
-		print ('', colors.red(str(i)), end ='')
-	elif i >= 74 and i<= 78:
-		print ('', colors.red(str(i)), end ='')
-	elif i >= 89 and i<= 94:
-		print ('', colors.red(str(i)), end ='')
-	elif i >= 105 and i<= 111:
-		print ('', colors.red(str(i)), end ='')
-	elif i >= 122 and i<= 127:
-		print ('', colors.red(str(i)), end ='')
-	elif i >= 138 and i<= 142:
-		print ('', colors.red(str(i)), end ='')
-	elif i >= 153 and i<= 156:
-		print ('', colors.red(str(i)), end ='')
-
+	if i in op_list:
+		print ('', colors.red(str(i)), end= '')
+	elif i in my_list:
+		print ('', colors.blue(str(i)), end= '')
 	else :
-		print ('', colors.white(str(i)), end= '')
+		print ('', colors.white(str(i)), end= '')	
 
 	if i == 8 or i == 18 or i == 29 or i == 41 or i == 54 or i == 68 or i == 83 or i == 99 or i == 116 or i == 132 or i == 147 or i == 161 or i == 174 or i == 186 or i == 197 or i == 207 or i == 216:
 		print ('\n')
@@ -60,7 +50,3 @@ for i in range(217):
 		if h==0:
 			flag1 = 1
 			h+=2
-nodes=[]
-nodes.append(node(True,1,True,6,False,3))
-
-nodes[0].print_p()	

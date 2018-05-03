@@ -487,10 +487,10 @@ def check_neighbor(target_list): # my point
                 target.append(f)  
 
     return target 
-def get_neighbor(valid_list, op_list):
+def get_neighbor(valid_list, target_list):
     # should check if the target is in valid or not
     # implant in dummy
-    target = check_neighbor(op_list)
+    target = check_neighbor(target_list)
     data = []
     for i in target:
         if i in valid_list:
@@ -518,11 +518,11 @@ def dead_or_alive_dir1(ID, node_list):
     doa_dir6 = -1
     position = -1
 
-    for i in node_list:
+    for node in node_list:
         if node.ID == wanted1:
-            doa_dir1 = i.dir1_cnt
+            doa_dir1 = node.dir1_cnt
         if node.ID == wanted6:
-            doa_dir6 = i.dir1_cnt
+            doa_dir6 = node.dir1_cnt
     
     if doa_dir1 != -1 and doa_dir6 != -1:
         # yes yes 
@@ -552,9 +552,9 @@ def dead_or_alive_dir2(ID, node_list):
 
     for node in node_list:
         if node.ID == wanted2:
-            doa_dir2 = i.dir2_cnt
+            doa_dir2 = node.dir2_cnt
         if node.ID == wanted5:
-            doa_dir5 = i.dir2_cnt
+            doa_dir5 = node.dir2_cnt
     
     if doa_dir2 != -1 and doa_dir5 != -1:
         # yes yes 
@@ -584,9 +584,9 @@ def dead_or_alive_dir3(ID, node_list):
 
     for node in node_list:
         if node.ID == wanted3:
-            doa_dir3 = i.dir3_cnt
+            doa_dir3 = node.dir3_cnt
         if node.ID == wanted4:
-            doa_dir4 = i.dir3_cnt
+            doa_dir4 = node.dir3_cnt
     
     if doa_dir3 != -1 and doa_dir4 != -1:
         # yes yes 
