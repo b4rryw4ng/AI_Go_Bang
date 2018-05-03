@@ -1,3 +1,4 @@
+import time
 # Global Value
 point0 = 0 # without 1, 2, 3
 boarder1 = [ 9, 19, 30, 42, 55, 69, 84 ] # without 1, 3
@@ -496,9 +497,9 @@ def dead_or_alive_dir1(ID, node_list):
     position = -1
 
     for i in node_list:
-        if i.ID == wanted1:
+        if node.ID == wanted1:
             doa_dir1 = i.dir1_cnt
-        if i.ID == wanted6:
+        if node.ID == wanted6:
             doa_dir6 = i.dir1_cnt
     
     if doa_dir1 != -1 and doa_dir6 != -1:
@@ -527,10 +528,10 @@ def dead_or_alive_dir2(ID, node_list):
     doa_dir5 = -1
     position = -1
 
-    for i in node_list:
-        if i.ID == wanted2:
+    for node in node_list:
+        if node.ID == wanted2:
             doa_dir2 = i.dir2_cnt
-        if i.ID == wanted5:
+        if node.ID == wanted5:
             doa_dir5 = i.dir2_cnt
     
     if doa_dir2 != -1 and doa_dir5 != -1:
@@ -559,10 +560,10 @@ def dead_or_alive_dir3(ID, node_list):
     doa_dir4 = -1
     position = -1
 
-    for i in node_list:
-        if i.ID == wanted3:
+    for node in node_list:
+        if node.ID == wanted3:
             doa_dir3 = i.dir3_cnt
-        if i.ID == wanted4:
+        if node.ID == wanted4:
             doa_dir4 = i.dir3_cnt
     
     if doa_dir3 != -1 and doa_dir4 != -1:
@@ -586,12 +587,10 @@ def dead_or_alive(ID, node_list):
     current_dir1_pos, dir1_case = dead_or_alive_dir1(ID, node_list)   
     current_dir2_pos, dir2_case = dead_or_alive_dir2(ID, node_list)
     current_dir3_pos, dir3_case = dead_or_alive_dir3(ID, node_list)
-    print(current_dir1_pos, dir1_case)
-    print(current_dir2_pos, dir2_case)
-    print(current_dir3_pos, dir3_case)
+    return current_dir1_pos, dir1_case, current_dir2_pos, dir2_case, current_dir3_pos, dir3_case
 
-def evaluation_function(ID,my_list,op_list,total_list,new,pos,dir):## ID is node type, new is the new_length and pos is the position. dir means dir1 or dir2 or dir3
-
+def evaluation_function(ID,my_list,op_list,new,pos,dir):## ID is node type, new is the new_length and pos is the position. dir means dir1 or dir2 or dir3
+    total_list = my_list + op_list
     evaluation = 0
     if ID.dir1_cnt == 5 or ID.dir2_cnt == 5 or ID.dir3_cnt == 5:
         evaluation = 1000000
@@ -969,37 +968,37 @@ def evaluation_function(ID,my_list,op_list,total_list,new,pos,dir):## ID is node
                         evaluation = evaluation + 2500
 
     return evaluation
-
+start = time.time()
 rtlist=[]
-op_list = [186,0]
+op_list = [0,186]
 my_list=[132, 161, 174]
 total_list = my_list + op_list
 print ("my_list: ", my_list)
 print ("op_list: ", op_list)
-print ("total_list: ", total_list)
-node = build_node(my_list)
-ta = 147
-current_dir1_pos, dir1_case, current_dir2_pos, dir2_case, current_dir3_pos, dir3_case = dead_or_alive(ta, node)
+#print ("total_list: ", total_list)
+my_node = build_node(my_list)
+move = 147
+current_dir1_pos, dir1_case, current_dir2_pos, dir2_case, current_dir3_pos, dir3_case = dead_or_alive(move, my_node)
 for index,i in enumerate(my_list):
-    if i > ta:
-        my_list.insert(index,ta)
+    if i > move:
+        my_list.insert(index,move)
         break
-print (my_list)
-node = build_node(my_list)
 
-for i in node :
-    i.print_data()
+my_node = build_node(my_list)
+
 evaluation_1 = 0
 evaluation_2 = 0
 evaluation_3 = 0
-for i in node:
-    if i.ID == 147:
+
+for node in my_node:
+    if node.ID == move:
         #i.print_data()
-        evaluation_1 = evaluation_function(i,my_list,op_list,total_list,dir1_case,current_dir1_pos,1)
-        evaluation_2 = evaluation_function(i,my_list,op_list,total_list,dir2_case,current_dir2_pos,2)
-        evaluation_3 = evaluation_function(i,my_list,op_list,total_list,dir3_case,current_dir3_pos,3)
+        evaluation_1 = evaluation_function(node,my_list,op_list,dir1_case,current_dir1_pos,1)
+        evaluation_2 = evaluation_function(node,my_list,op_list,dir2_case,current_dir2_pos,2)
+        evaluation_3 = evaluation_function(node,my_list,op_list,dir3_case,current_dir3_pos,3)
+        break
 
-
+print (time.time() - start)
 
 '''
 for i in rtlist:
