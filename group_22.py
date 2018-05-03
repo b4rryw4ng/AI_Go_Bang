@@ -1102,7 +1102,7 @@ def get_neighbor_dfs(valid_list, target_list, ID):
 
 ###### IDS and Evaluaion function
 ###### Time
-__Time_limit = 0
+__Time_limit = 4.95
 __Start = 0 
 __Time_flag = 0
 ###### Time
