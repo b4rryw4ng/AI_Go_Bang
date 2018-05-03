@@ -860,8 +860,11 @@ def IDS(my_list, op_list, valid_list):
     #data neighbor in valid move 
     # all input is raw data
     #start is the time 
-    global __move, __alpha, __new_alpha
+    global __move, __alpha
     global __Start, __MAX_depth
+    __MAX_depth = 1
+    __move = -1
+    __alpha = -100
     depth = 0
     move = []
     while True:
@@ -896,7 +899,7 @@ def dfs(Index, ID, first_move, data, my_list, op_list, valid_list, depth):
     # ID current op move
     # first_move the appropriate move
     global __MAX_depth
-    global __move, __alpha, __new_alpha 
+    global __move, __alpha
     global __Time_flag
     if __Time_flag:
         return 
@@ -1099,6 +1102,7 @@ def get_neighbor_dfs(valid_list, target_list, ID):
 
 ###### IDS and Evaluaion function
 ###### Time
+__Time_limit = 0
 __Start = 0 
 __Time_flag = 0
 ###### Time
@@ -1309,6 +1313,7 @@ class Agent:
 
         pos = IDS(raw_my_list, raw_op_list, raw_valid_list)
         #Minimax(self.get_valid_pos(), oplist, alpha, depth)
+        __Time_flag = 0
         return pos
 
     def _write_move(self, pos):
