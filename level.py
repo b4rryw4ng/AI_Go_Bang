@@ -12,7 +12,7 @@ point208 = 208 # without 3, 5, 6
 boarder5 = [ 209, 210, 211, 212, 213, 214, 215 ] # without 5, 6
 point100 = 100 # without 1, 3, 5
 boarder6 = [ 117, 133, 148, 162,175, 187, 198 ] # without 3, 5
-__Time_limit = 1000
+__Time_limit = 4.95
 class Node:
     def __init__(self, ID, dir1_cnt, dir2_cnt, dir3_cnt):
         self.ID = ID
@@ -352,6 +352,7 @@ def build_node(op_list):
         dir5_cnt = 0
         dir6_cnt = 0
     return node_list
+
 def dir1_neighbor(ID):
     level = get_level(ID)
 
@@ -953,21 +954,6 @@ def get_neighbor_dfs(valid_list, target_list, ID):
     data = sorted(data)
     #finish sorting
     return data    
-start = t.time()
-rtlist=[]
-#my_list = []
-#op_list = []
-op_list = [99,132, 161, 174]
-my_list= [115,184,185,197,207]
-v_list = []
-for i in range(217):
-    if i not in op_list and i not in my_list:
-        v_list.append(i)
-
-my_neighbor = get_neighbor(v_list, my_list)
-total_list = my_list + op_list
-#print ("my_list: ", my_list)
-#print ("op_list: ", op_list)
 
 __Start = t.time()
 __move = -1
@@ -980,35 +966,38 @@ def IDS(my_list, op_list, valid_list):
     #data neighbor in valid move 
     # all input is raw data
     #start is the time 
-    global __move, __alpha, __new_alpha, __Win, __Win_move
+    global __move, __alpha, __Win, __Win_move
     global __Start, __MAX_depth
     depth = 0
+    __alpha = -100
     move = []
     while True:
-        #print ("in while")
+        print ("in while")
         # control max depth 
         __MAX_depth += 1
-        #print ("__MAX_depth : ",__MAX_depth)
+        print ("__MAX_depth : ",__MAX_depth)
 
         data = []
-        
-        dfs(-1, -1, -1, data, my_list, op_list, valid_list, 0)
-        #print ("in IDS return __move : ",__move)
+        __alpha = -100
+        dfs(-1, -1, -1, data, my_list, op_list, valid_list, 0, 0)
+        print ("in IDS return __move : ",__move)
+        print ("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+        print ("")
         move.append(__move)
         if __Win == 1 and __MAX_depth == 1:
             break
 
-        __alpha = -100
+        
         __move = -1
         __Win = 0
         if t.time() - __Start > __Time_limit:
             #__Time_flag = 1
             #print (t.time() - __Start)
             break # set timer
-        if __MAX_depth == 3 :
-            break
-    #print (__MAX_depth, __Time_flag)
-    #print (move)
+        #if __MAX_depth == 3 :
+        #    break
+    print (__MAX_depth, __Time_flag)
+    print (move)
 
     if __Win :
         return move[0]
@@ -1025,15 +1014,12 @@ def IDS(my_list, op_list, valid_list):
     else :
         return move[-2]
     
-x = 0
-def dfs(Index, ID, first_move, data, my_list, op_list, valid_list, depth):
-    global x
-    x += 1
+def dfs(Index, ID, first_move, data, my_list, op_list, valid_list, depth, evaluated):
     # Index which DFS node
     # ID current op move
     # first_move the appropriate move
     global __MAX_depth, __Win
-    global __move, __alpha, __new_alpha 
+    global __move, __alpha 
     global __Time_flag
     if __Time_flag or __Win:
         return 
@@ -1044,98 +1030,132 @@ def dfs(Index, ID, first_move, data, my_list, op_list, valid_list, depth):
     if depth == __MAX_depth:
         #print (data)
         if __MAX_depth == 1:
-                flag, alpha = evaluation_function_first_level(first_move,data, my_list, op_list)
+                #flag, alpha = evaluation_function_first_level(first_move, data, my_list, op_list)
+                flag, alpha = evaluation_function_first_level(first_move, data, op_list, my_list)
                 # data current this position 
                 if flag == 0:
                     __alpha = alpha
                     __move = first_move
                     #print (__move,__alpha)
-                    if __alpha == 1000000:
+                    if __alpha >= 1000000:
                         __Win = 1
         else : 
             if Index == 0:
-                alpha = evaluation_function_full(first_move,data, my_list, op_list)
-                # data current this position 
-                __alpha = alpha
-                __move = first_move
+                alpha = evaluation_function_full(data[Index], op_list, my_list, evaluated)
+                # data current this position
+                #if __alpha < alpha: 
+                if __alpha == -100:
+                    __alpha = alpha
+                    __move = first_move
+                elif __alpha < alpha:
+                    __alpha = alpha
+                    __move = first_move
                 #print (__move,__alpha)
-                if __alpha == 1000000:
+                if __alpha >= 1000000:
                     __Win = 1
                 #print (__alpha)
             else :
-                flag, alpha = evaluation_function_a_B(first_move, data, my_list, op_list)
+                flag, alpha = evaluation_function_a_B( data[Index], op_list, my_list, evaluated)
                 if flag == 0:
+                    #if __alpha < alpha:
                     __alpha = alpha
                     __move = first_move
                     #print (__move,__alpha)
-                    if __alpha == 1000000:
+                    if __alpha >= 1000000:
                         __Win = 1
             
-        # print ("__move", __move, "alpha ",__alpha)
+        print ("__move", __move, "alpha ",__alpha)
         return
     else :
         depth += 1
-    
+        
+    temp_valid_list = valid_list.copy()
     temp_op_list = op_list.copy()
     temp_my_list = my_list.copy()
-    #total = op_list.copy() + my_list.copy()
-    #total = sorted (total)
-    #print ("total : ", total)
-    if depth %2 == 0 :
-        # if len my > op 0 is my turn
-        # my turn 
-        # update op
-        # find my neighbor
-        if ID != -1:    
-            for index, i in enumerate(op_list):
-                if i > ID and ID != -1:          
-                    temp_op_list.insert(index, ID)
-                    #print ("add ID ", ID, " in temp_op_list ", temp_op_list )
-                    break
-        total = sorted( my_list + temp_op_list)
-        data = get_neighbor_dfs(valid_list, total, ID)
-        #print ("my_list data:", data)
-    
-    else:
-        # op turn 
-        #update op
-        #find my neighbor
-        if ID != -1:
-            for index, i in enumerate(my_list):
-                if i > ID:          
-                    temp_my_list.insert(index, ID)
-                    #print ("add ID ", ID, " in temp_my_list ", temp_my_list )
-                    break
-        total = sorted(temp_my_list + op_list)
-        data = get_neighbor_dfs(valid_list, total, ID)
-        #print ("op_list data:", data)
-
-    #print ("case : ",depth %2)
-    if depth %2 == 1:
+    print ("temp_op_list : ",temp_op_list)
+    print ("temp_my_list : ",temp_my_list)
+    #print (temp_my_list, temp_op_list)
+    #evaluated = 0 
+    if ID != -1:  
+        temp_valid_list.remove(ID)       
+        for index, i in enumerate(temp_op_list):
+            if i > ID:          
+                temp_op_list.insert(index, ID)
+                print ("add ID ", ID, " in temp_op_list ", temp_op_list )
+                break
+            
+    total = sorted( temp_my_list + temp_op_list)
+    print ("total : ", total)
+    data = get_neighbor_dfs(temp_valid_list, total, ID)
+    print ("my_list data:", data)
+    print ("case : ",depth %2, "evaluated :", evaluated)
+    if depth %2 == 0:
         # my turn
         for index, i in enumerate(data):
             
             if depth == 1:
                 first_move = i
-                #print ("first_move:", first_move)
+                print ("first_move:", first_move)
 
-            #print ("current index :" , index, "value : ", i, "depth :", depth)
-            dfs(index, i, first_move, data, op_list, temp_my_list, valid_list, depth)
+            print ("first_move:", first_move, "current index :" , index, "value : ", i, "depth :", depth)
+            #if depth != 1 :
+            #    evaluated += evaluation_in_process(ID, op_list, my_list)
+            dfs(index, i, first_move, data, temp_op_list, temp_my_list, temp_valid_list, depth, evaluated)
+            #dfs(index, i, first_move, data, my_list, temp_op_list, valid_list, depth, evaluated)
     else :
         for index, i in enumerate(data):
             
             if depth == 1:
                 first_move = i
-                #print ("first_move:", first_move)
-            #print ("current index :" , index, "value : ", i, "depth :", depth)
-            dfs(index, i, first_move, data, my_list, temp_op_list, valid_list, depth)
+                print ("first_move:", first_move)
+            print ("len of data", len(data), "current index :" , index, "value : ", i, "depth :", depth)
+            #evaluated += evaluation_in_process(ID, my_list)
+            if depth != 1 :
+                evaluated += evaluation_in_process(ID, op_list, my_list)
+            dfs(index, i, first_move, data, temp_my_list, temp_op_list, temp_valid_list, depth, evaluated)
+            #dfs(index, i, first_move, data, op_list, temp_my_list, valid_list, depth, evaluated)
 
     return
-def evaluation_function_first_level(first_move, data, my_list, op_list):
+
+def evaluation_in_process(ID, my_list, op_list):
+    print ("evaluation_in_process",ID , my_list, op_list)
+    global __Time_flag
+    #alpha = __alpha
+    if __Time_flag:
+        return -1 
+        # 1 dead-end 
+    if t.time() - __Start > __Time_limit:
+        __Time_flag = 1
+        return -1
+    data_node = build_node(my_list)
+    temp_my_list = my_list.copy()
+    for index, i in enumerate(temp_my_list):
+        if i > ID :
+            temp_my_list.insert(index, ID)
+            break
+    
+    current_dir1_pos, dir1_case, current_dir2_pos, dir2_case, current_dir3_pos, dir3_case = \
+        dead_or_alive(ID, data_node)
+    
+    data_node = build_node(temp_my_list)
+    temp = data_node[0]
+    for i in data_node:
+        if i.ID == ID:
+            temp = i
+            break
+    evaluate1 = evaluate_function(temp, my_list, op_list, current_dir1_pos, dir1_case, 1)
+    evaluate2 = evaluate_function(temp, my_list, op_list, current_dir2_pos, dir2_case, 2)
+    evaluate3 = evaluate_function(temp, my_list, op_list, current_dir3_pos, dir3_case, 3)
+    
+    evaluated = evaluate1 + evaluate2 + evaluate3
+    print ("evaluation in pro :" ,evaluated)
+    return evaluated
+
+def evaluation_function_first_level( first_move, data, my_list, op_list):
     global __Time_flag, __alpha, __Win
     max_value = -100
     alpha = __alpha
-    #print ("first_level evaluation")
+    print ("first_level evaluation")
     
     if __Time_flag:
         return max_value 
@@ -1145,8 +1165,6 @@ def evaluation_function_first_level(first_move, data, my_list, op_list):
         return max_value 
 
     data_node = build_node(my_list)
-    #print ("in evaluation full data ", data)
-    #print ("in evaluation full my_list ", my_list)
     
 
     temp_my_list = my_list.copy()
@@ -1173,30 +1191,33 @@ def evaluation_function_first_level(first_move, data, my_list, op_list):
     evaluate3 = evaluate_function(temp, my_list, op_list, current_dir3_pos, dir3_case, 3)
     evaluated = evaluate1 + evaluate2 + evaluate3
     #evaluated = 100
+    if first_move == 147:
+        print ("evaluated: 147",evaluated)
     if evaluated == 1000000:
-        #print (first_move, temp.ID, my_list, evaluated)
         __Win = 1
         return 0, evaluated
-    if max_value == -100 or max_value == 0 : 
+    if max_value == -100 : 
     #if max_value == -100 : 
         max_value = evaluated
 
     #print ("max_value : ",evaluated)
     if max_value < evaluated:
         max_value = evaluated
-    
-    if max_value == 0:
-        max_value = 10
+
     if alpha < max_value:
-        alpha = max_value
+        alpha = max_value 
         return 0, alpha
     return 1, alpha
     # 1 set up new alpha 
-def evaluation_function_full(first_move, data, my_list, op_list):
+
+def evaluation_function_full( ID, my_list, op_list, p_eval):
     global __Time_flag
     max_value = -100
-    #print ("index 1 evaluation fucntion")
-    
+    print ("index 1 evaluation function", p_eval)
+    #data = get_neighbor(valid_list, my_list + op_list)
+    print("data : ", ID)
+    print("my_list : ", my_list)
+    print("op_list : ", op_list)
     if __Time_flag:
         return max_value 
         # 1 dead-end 
@@ -1208,50 +1229,47 @@ def evaluation_function_full(first_move, data, my_list, op_list):
     #print ("in evaluation full data ", data)
     #print ("in evaluation full my_list ", my_list)
     
-    for ID in data:
-        temp_my_list = my_list.copy()
-        for index, i in enumerate(temp_my_list):
-            if i > ID :
-                temp_my_list.insert(index, ID)
-                break
-            
-        current_dir1_pos, dir1_case, current_dir2_pos, dir2_case, current_dir3_pos, dir3_case = \
-            dead_or_alive(ID, data_node)
-
-        data_node = build_node(temp_my_list)
-        temp = data_node[0] #initialize
-
-        for i in data_node:
-            if i.ID == ID:
-                temp = i
-                break
-        #temp.print_data()
-        # temp is current node 
-
-        evaluate1 = evaluate_function(temp, my_list, op_list, current_dir1_pos, dir1_case, 1)
-        evaluate2 = evaluate_function(temp, my_list, op_list, current_dir2_pos, dir2_case, 2)
-        evaluate3 = evaluate_function(temp, my_list, op_list, current_dir3_pos, dir3_case, 3)
-        evaluated = evaluate1 + evaluate2 + evaluate3
-        #evaluated = 100
-        if evaluated == 1000000:
-
-            #print (first_move, temp.ID, my_list, evaluated)
-            return evaluated
-        if max_value == -100 or max_value == 0 : 
-        #if max_value == -100 : 
-            max_value = evaluated
-
-        #print ("max_value : ",evaluated)
-        if max_value < evaluated:
-            max_value = evaluated
+    #for ID in data:
+    temp_my_list = my_list.copy()
+    for index, i in enumerate(temp_my_list):
+        if i > ID :
+            temp_my_list.insert(index, ID)
+            break
         
-    if max_value == 0:
-        max_value = 10
-    return max_value
+    current_dir1_pos, dir1_case, current_dir2_pos, dir2_case, current_dir3_pos, dir3_case = \
+        dead_or_alive(ID, data_node)
+
+    data_node = build_node(temp_my_list)
+    temp = data_node[0] #initialize
+
+    for i in data_node:
+        if i.ID == ID:
+            temp = i
+            break
+    #temp.print_data()
+    # temp is current node 
+
+    evaluate1 = evaluate_function(temp, my_list, op_list, current_dir1_pos, dir1_case, 1)
+    evaluate2 = evaluate_function(temp, my_list, op_list, current_dir2_pos, dir2_case, 2)
+    evaluate3 = evaluate_function(temp, my_list, op_list, current_dir3_pos, dir3_case, 3)
+    evaluated = evaluate1 + evaluate2 + evaluate3 + p_eval
+    if evaluated == 1000000:
+
+        #print (first_move, temp.ID, my_list, evaluated)
+        return evaluated 
+    if max_value == -100 or max_value == 0 : 
+    #if max_value == -100 : 
+        max_value = evaluated
+
+    #print ("max_value : ",evaluated)
+    if max_value < evaluated:
+        max_value = evaluated
+    
+    return max_value 
     # 1 set up new alpha 
-#[83, 98, 114, 116, 131, 146, 147, 160, 171, 172, 173, 183, 186, 195, 196, 206, 216]
-def evaluation_function_a_B(first_move, data, my_list, op_list):
-    #print ("evaluation fucntion a B")
+
+def evaluation_function_a_B(ID, my_list, op_list, p_eval):
+    print ("evaluation function a B", p_eval)
     global __Time_flag
     alpha = __alpha
     if __Time_flag:
@@ -1260,67 +1278,80 @@ def evaluation_function_a_B(first_move, data, my_list, op_list):
     if t.time() - __Start > __Time_limit:
         __Time_flag = 1
         return 1, alpha 
-    
+    #data = get_neighbor(valid_list, my_list + op_list)
     data_node = build_node(my_list)
 
     max_value = -100
     min_move = -1
-    #print ("in evaluation a_B data ", data)
-    #print ("in evaluation a_B my_list ", my_list)
-    for ID in data:
-        temp_my_list = my_list.copy()
-        for index, i in enumerate(temp_my_list):
-            if i > ID :
-                temp_my_list.insert(index, ID)
-                break
-            
-        current_dir1_pos, dir1_case, current_dir2_pos, dir2_case, current_dir3_pos, dir3_case = \
-            dead_or_alive(ID, data_node)
-
-        data_node = build_node(temp_my_list)
-        temp = data_node[0] #initialize
-
-        for i in data_node:
-            if i.ID == ID:
-                temp = i
-                break
-        #temp.print_data()
-        # temp is current node 
-
-        evaluate1 = evaluate_function(temp, my_list, op_list, current_dir1_pos, dir1_case, 1)
-        evaluate2 = evaluate_function(temp, my_list, op_list, current_dir2_pos, dir2_case, 2)
-        evaluate3 = evaluate_function(temp, my_list, op_list, current_dir3_pos, dir3_case, 3)
+    print ("in evaluation a_B data ", p_eval,  ID)
+    print ("in evaluation a_B my_list ", my_list)
+    #for ID in data:
+    temp_my_list = my_list.copy()
+    for index, i in enumerate(temp_my_list):
+        if i > ID :
+            temp_my_list.insert(index, ID)
+            break
         
-        evaluated = evaluate1 + evaluate2 + evaluate3
-        #evaluated = 100
-        if evaluated == 1000000:
-            #print (first_move, temp.ID, my_list, evaluated)
-            return 0, evaluated
-            
-        if max_value == -100 or max_value == 0: 
-        #if max_value == -100: 
-            max_value = evaluated
-        
+    current_dir1_pos, dir1_case, current_dir2_pos, dir2_case, current_dir3_pos, dir3_case = \
+        dead_or_alive(ID, data_node)
 
-        if max_value < evaluated:
-            max_value = evaluated
+    data_node = build_node(temp_my_list)
+    temp = data_node[0] #initialize
+
+    for i in data_node:
+        if i.ID == ID:
+            temp = i
+            break
+    #temp.print_data()
+    # temp is current node 
+
+    evaluate1 = evaluate_function(temp, my_list, op_list, current_dir1_pos, dir1_case, 1)
+    evaluate2 = evaluate_function(temp, my_list, op_list, current_dir2_pos, dir2_case, 2)
+    evaluate3 = evaluate_function(temp, my_list, op_list, current_dir3_pos, dir3_case, 3)
+    
+    evaluated = evaluate1 + evaluate2 + evaluate3 + p_eval
+    #evaluated = 100
+    if evaluated == 1000000:
+        #print (first_move, temp.ID, my_list, evaluated)
+        return 0, evaluated 
         
-        if alpha < max_value and evaluated != 0:
-        #if alpha > max_value :    
-            #print ("got purning ", max_value)
-            return 1, alpha
+    if max_value == -100 : 
+    #if max_value == -100: 
+        max_value = evaluated
+    
+
+    if max_value < evaluated:
+        max_value = evaluated
+    
+    if alpha < max_value :
+    #if alpha > max_value :  
+        print (my_list, op_list)  
+        print ("got pruning ,p_eval, alpha, max_value",p_eval,alpha, max_value)
+        return 1, alpha 
     
     if alpha < max_value:
-        return 0, max_value
+        return 0, max_value 
     # after all iteration, the min value is larger than current alpha, update alpha    
     #print ("finish but no max_value", max_value)
-    return 1, alpha
+    return 1, alpha 
 #print ("IDS")
+op_list = [99,132, 161, 174]
+my_list= [115,184,185,197,207]
+v_list = []
+for i in range(217):
+    if i not in op_list and i not in my_list:
+        v_list.append(i)
 
+my_neighbor = get_neighbor(v_list, my_list)
+total_list = my_list + op_list
+#print ("my_list: ", my_list)
+#print ("op_list: ", op_list)
 if len(my_list) == 0 and len(op_list) == 0 :
     h = 108
 else : 
     h = IDS(my_list, op_list, v_list)
+#h = -10
+
+
 print (t.time() - __Start)
 print (h)
-print (x)
