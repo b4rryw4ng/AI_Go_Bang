@@ -866,7 +866,7 @@ def IDS(my_list, op_list, valid_list):
     __move = -1
     __alpha = -100
     depth = 0
-    move = []
+    move = [-1]
     while True:
         #print ("in while")
         # control max depth 
@@ -889,9 +889,17 @@ def IDS(my_list, op_list, valid_list):
         #    break
     print (__MAX_depth, __Time_flag)
     if __Time_flag:
+        __MAX_depth -=1
+    
+    turn = __MAX_depth % 2 
+    if turn ==1 and __Time_flag == 1:
         return move[-2]
-    else:
+    elif turn == 0 and __Time_flag == 1:
+        return move[-3]
+    elif turn == 1 and __Time_flag == 0:
         return move[-1]
+    else :
+        return move[-2]
     #return move[a]
 
 def dfs(Index, ID, first_move, data, my_list, op_list, valid_list, depth):
@@ -968,8 +976,8 @@ def dfs(Index, ID, first_move, data, my_list, op_list, valid_list, depth):
     else :
         for index, i in enumerate(data):
             
-            if depth == 1:
-                first_move = i
+            #if depth == 1:
+            #    first_move = i
                 #print ("first_move:", first_move)
             #print("current index :" , index, "value : ", i, "depth :", depth)
             dfs(index, i, first_move, data, op_list, temp_my_list, valid_list, depth)
@@ -1102,7 +1110,7 @@ def get_neighbor_dfs(valid_list, target_list, ID):
 
 ###### IDS and Evaluaion function
 ###### Time
-__Time_limit = 0
+__Time_limit = 4.9
 __Start = 0 
 __Time_flag = 0
 ###### Time
@@ -1310,9 +1318,15 @@ class Agent:
         raw_my_list = self.get_my_pos()
         raw_op_list = self.get_opponent_pos()
         raw_valid_list = self.get_valid_pos()
+        my_len = len(raw_my_list)
+        op_len = len(raw_op_list)
+        if my_len == 0 and op_len == 0 :
+            pos = 108
+        #elif my_len == op_len : #I'm the first player
+        else :
+            pos = IDS(raw_my_list, raw_op_list, raw_valid_list)
 
-        pos = IDS(raw_my_list, raw_op_list, raw_valid_list)
-        #Minimax(self.get_valid_pos(), oplist, alpha, depth)
+        
         __Time_flag = 0
         return pos
 
